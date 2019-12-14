@@ -1,3 +1,7 @@
+body {
+background-color: powderblue;	
+}
+
 label {
 	display: block;
 	margin: 5px 0;
