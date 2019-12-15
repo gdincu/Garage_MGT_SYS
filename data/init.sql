@@ -33,7 +33,7 @@ CREATE TABLE clientmasina (
 	id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	idclient INT(11) UNSIGNED,
 	idmasina INT(11) UNSIGNED,
-	data TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+--	data TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
 	FOREIGN KEY (idclient) REFERENCES client(id),
 	FOREIGN KEY (idmasina) REFERENCES masina(id)
 );
@@ -57,14 +57,19 @@ CREATE TABLE reparatie (
 	pret FLOAT(50) NOT NULL
 );
 
+
+
 use GMS;
 CREATE TABLE facturareparatii (
 	id int(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	idfactura INT(11) UNSIGNED NOT NULL,
 	idreparatie INT(11) UNSIGNED NOT NULL,
+	cantitate INT(11) UNSIGNED NOT NULL,
+	cost FLOAT(30) UNSIGNED NOT NULL,
 	FOREIGN KEY (idfactura) REFERENCES factura(id),
 	FOREIGN KEY (idreparatie) REFERENCES reparatie(id)
 );
+
 
 
 USE GMS;
@@ -117,3 +122,19 @@ INSERT INTO	facturareparatii
 VALUES		(null,1,2),
 			(null,2,2),
 			(null,2,3);
+
+
+USE GMS;
+INSERT INTO	facturareparatii
+VALUES		(null,2,2,2,2);
+
+DROP TRIGGER `costreparatie`;
+
+USE GMS;
+DELIMITER $$
+CREATE TRIGGER `costreparatie` BEFORE INSERT ON facturareparatii
+    FOR EACH ROW
+    BEGIN
+      SET NEW.cost = NEW.cantitate * (SELECT pret FROM reparatie WHERE id = NEW.id);
+END$$
+DELIMITER ;
