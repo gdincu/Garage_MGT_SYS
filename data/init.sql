@@ -42,7 +42,9 @@ CREATE TABLE factura (
 	id int(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	idclient INT(11) UNSIGNED NOT NULL,
 	idmasina INT(11) UNSIGNED NOT NULL,
-	cost FLOAT(50) NOT NULL,
+	cost_manopera FLOAT(50) NOT NULL,
+	cost_piese FLOAT(50) NOT NULL,
+	cost_total FLOAT(50) NOT NULL,
 	observatii VARCHAR(100),
 	date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
 	FOREIGN KEY (idclient) REFERENCES client(id),
@@ -58,20 +60,52 @@ CREATE TABLE reparatie (
 );
 
 
+use GMS;
+CREATE TABLE piese (
+	id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	nume VARCHAR(100) NOT NULL,
+	producator  VARCHAR(100) NOT NULL,
+	costachizitie FLOAT(50) UNSIGNED NOT NULL,
+	costvanzare FLOAT(50) UNSIGNED NOT NULL,
+	cantitate FLOAT(50) UNSIGNED NOT NULL,
+	observatii VARCHAR(250),
+	date TIMESTAMP DEFAULT CURRENT_TIMESTAMP()
+);
+
+use GMS;
+CREATE TABLE facturapiese (
+	id int(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+	idfactura INT(11) UNSIGNED NOT NULL,
+	idpiesa INT(11) UNSIGNED NOT NULL,
+	cantitate INT(11) UNSIGNED NOT NULL,
+	cost FLOAT(30) UNSIGNED NOT NULL,
+	FOREIGN KEY (idfactura) REFERENCES factura(id),
+	FOREIGN KEY (idpiesa) REFERENCES piese(id)
+);
+
 
 use GMS;
 CREATE TABLE facturareparatii (
 	id int(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	idfactura INT(11) UNSIGNED NOT NULL,
 	idreparatie INT(11) UNSIGNED NOT NULL,
-	cantitate INT(11) UNSIGNED NOT NULL,
+	cantitatereparatie INT(11) UNSIGNED NOT NULL,
 	cost FLOAT(30) UNSIGNED NOT NULL,
 	FOREIGN KEY (idfactura) REFERENCES factura(id),
 	FOREIGN KEY (idreparatie) REFERENCES reparatie(id)
 );
 
 
+--Inserting values into piese
+USE GMS;
+INSERT INTO piese VALUES 
+(null,'Frana','BREMBO',12.12,15.15,100,null,),
+(null,'Ambreiaj','ATX',45.11,102.15,22,null,),
+(null,'Roata','DACIA',78.92,153.44,87,null,);
 
+
+
+--Inserting values into client
 USE GMS;
 INSERT INTO	client 
 VALUES 		(null,'A1','A1','0770777222',null,null,'Client Nou',CURRENT_TIMESTAMP()),
@@ -82,6 +116,7 @@ VALUES 		(null,'A1','A1','0770777222',null,null,'Client Nou',CURRENT_TIMESTAMP()
 			(null,'A6','A6','0770777222',null,null,'Client Nou',CURRENT_TIMESTAMP()),
 			(null,'A7','A7','0770777222',null,null,'Client Nou',CURRENT_TIMESTAMP());
 			
+--Inserting values into masina
 USE GMS;
 INSERT INTO	masina
 VALUES		(null,'DJ00AAA','FORD','FIESTA','1.3 TDI','A333AASDASDASD',null,'NU',null,'223456',null,'Da',CURRENT_TIMESTAMP()),
@@ -117,24 +152,35 @@ VALUES		(null,3,4,123.44,null,CURRENT_TIMESTAMP()),
 			(null,5,2,33.44,null,CURRENT_TIMESTAMP()),
 			(null,7,6,991.44,null,CURRENT_TIMESTAMP());
 
+
+
+--Insert values into 'facturareparatii'
+--id	idfactura	idreparatie	cantitatereparatie	cost
 USE GMS;
-INSERT INTO	facturareparatii
-VALUES		(null,1,2),
-			(null,2,2),
-			(null,2,3);
+SET @idfacturaTemp = 5;
+SET @idreparatie = 3;
+SET @cantitatereparatie = 4;
+INSERT INTO facturareparatii values (null,@idfacturaTemp,@idreparatie,@cantitatereparatie,@cantitatereparatie * (SELECT pret FROM reparatie WHERE id = @idreparatie));
+UPDATE factura SET factura.cost_manopera = ROUND((SELECT SUM(cost) FROM facturareparatii WHERE factura.id = @idfacturaTemp),2) WHERE factura.id = @idfacturaTemp;
 
-
+--Insert values into 'facturapiese'
+--id	idfactura	idpiesa	cantitate	cost
 USE GMS;
-INSERT INTO	facturareparatii
-VALUES		(null,2,2,2,2);
+SET @idfacturaTemp = 5;
+SET @idpiesa = 2;
+SET @cantitatepiese = 2;
+INSERT INTO facturapiese values (null,@idfacturaTemp,@idpiesa,@cantitatepiese,@cantitatepiese * (SELECT costvanzare FROM piese WHERE id = @idpiesa));
+UPDATE factura SET factura.cost_piese = ROUND((SELECT SUM(cost) FROM facturapiese WHERE factura.id = @idfacturaTemp),2) WHERE factura.id = @idfacturaTemp;
 
-DROP TRIGGER `costreparatie`;
 
+--TBC
 USE GMS;
 DELIMITER $$
-CREATE TRIGGER `costreparatie` BEFORE INSERT ON facturareparatii
-    FOR EACH ROW
-    BEGIN
-      SET NEW.cost = NEW.cantitate * (SELECT pret FROM reparatie WHERE id = NEW.id);
-END$$
+CREATE PROCEDURE fin_factura (IN idfactura int(11)) 
+BEGIN
+    SELECT (factura.cost_piese + factura.cost_manopera) 
+  INTO GMS.factura (SELECT cost_total FROM GMS.factura)
+  FROM factura 
+  WHERE factura.id = @idfactura;
+END $$
 DELIMITER ;
