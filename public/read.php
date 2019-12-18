@@ -6,8 +6,8 @@
  *
  */
 
-require "../config.php";
-require "../common.php";
+require "config.php";
+require "common.php";
 
 if (isset($_POST['submit'])) {
   if (!hash_equals($_SESSION['csrf'], $_POST['csrf'])) die();
@@ -31,7 +31,6 @@ if (isset($_POST['submit'])) {
   }
 }
 ?>
-<?php require "templates/header.php"; ?>
         
 <?php  
 if (isset($_POST['submit'])) {
@@ -79,7 +78,3 @@ if (isset($_POST['submit'])) {
   <input type="text" id="location" name="location">
   <input type="submit" name="submit" value="View Results">
 </form>
-
-<a href="index.php">Back to home</a>
-
-<?php require "templates/footer.php"; ?>
