@@ -1,3 +1,5 @@
+<?php include "../templates/header.php"; ?>
+
 <?php
 
 /**
@@ -31,7 +33,7 @@ if (isset($_POST['submit'])) {
   }
 }
 ?>
-        
+      
 <?php  
 if (isset($_POST['submit'])) {
   if ($result && $statement->rowCount() > 0) { ?>
@@ -78,3 +80,5 @@ if (isset($_POST['submit'])) {
   <input type="text" id="location" name="location">
   <input type="submit" name="submit" value="View Results">
 </form>
+
+<?php include "../templates/footer.php"; ?>
