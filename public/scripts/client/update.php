@@ -55,4 +55,4 @@ try {
 
 <a href="index.php">Back to home</a>
 
-<?php require "templates/footer.php"; ?>
+<?php include "../../templates/footer_script.php"; ?>
