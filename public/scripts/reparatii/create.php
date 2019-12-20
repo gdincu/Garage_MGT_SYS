@@ -12,23 +12,29 @@ if (isset($_POST['submit'])) {
   try  {
     $connection = new PDO($dsn, $username, $password, $options);
     
-    $new_user = array(
-      "nume" => $_POST['nume'],
-      "prenume"  => $_POST['prenume'],
-      "nrtelefon"     => $_POST['nrtelefon'],
-      "email"       => $_POST['email'],
-      "adresa"  => $_POST['adresa'],
-      "observatii"  => $_POST['observatii']
-    );
+    $marcamasina  = $_POST['marcamasina'];
+    $modelmasina  = $_POST['modelmasina'];
+    $nume         = $_POST['nume'];
+    $durata       = $_POST['durata'];
+    $pret         = $_POST['pret'];
 
-    $sql = sprintf(
-      "INSERT INTO %s (%s) values (%s)",
-      "client","nume,prenume,nrtelefon,email,adresa,observatii",
-      ":" . implode(", :", array_keys($new_user))
-    );
-    
+
+    $sql = "INSERT INTO reparatii 
+            (nume,durata,pret,idmasina) 
+            (SELECT :nume , :durata , :pret , id 
+                  FROM auto_list
+                  WHERE marca = :marcamasina
+                  AND model = :modelmasina)";
+
+
     $statement = $connection->prepare($sql);
-    $statement->execute($new_user);
+    $statement->bindParam(':modelmasina', $modelmasina, PDO::PARAM_STR);
+    $statement->bindParam(':marcamasina', $marcamasina, PDO::PARAM_STR);
+    $statement->bindParam(':nume', $nume, PDO::PARAM_STR);
+    $statement->bindParam(':durata', $durata, PDO::PARAM_STR);
+    $statement->bindParam(':pret', $pret, PDO::PARAM_STR);
+    $statement->execute();
+
   } catch(PDOException $error) {
       echo $sql . "<br>" . $error->getMessage();
   }
@@ -36,30 +42,27 @@ if (isset($_POST['submit'])) {
 ?>
 
   <?php if (isset($_POST['submit']) && $statement) : ?>
-    <blockquote><?php echo escape($_POST['prenume']); ?> adaugat cu success.</blockquote>
+    <blockquote><?php echo escape($_POST['nume']); ?> adaugat cu success.</blockquote>
   <?php endif; ?>
 
-  <h2>Adauga client</h2>
+  <h2>Adauga reparatie</h2>
 
   <form method="post">
     <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
     <label for="nume">Nume</label>
     <input type="text" name="nume" id="nume" required>
     <br>
-    <label for="prenume">Prenume</label>
-    <input type="text" name="prenume" id="prenume" required>
+     <label for="marcamasina">Marca</label>
+    <input type="text" id="marcamasina" name="marcamasina" value="%%">
     <br>
-    <label for="nrtelefon">Nr. de Telefon</label>
-    <input type="text" name="nrtelefon" id="nrtelefon" required>
+    <label for="modelmasina">Model</label>
+    <input type="text" id="modelmasina" name="modelmasina" value="%%">
     <br>
-    <label for="email">Email</label>
-    <input type="text" name="email" id="email">
+    <label for="durata">Durata</label>
+    <input type="text" name="durata" id="durata" required>
     <br>
-    <label for="adresa">Adresa</label>
-    <input type="text" name="adresa" id="adresa">
-    <br>
-    <label for="observatii">Observatii</label>
-    <input type="text" name="observatii" id="observatii">
+    <label for="pret">Pret</label>
+    <input type="text" name="pret" id="pret" required>
     <br><br>
     <input type="submit" name="submit" value="Salveaza">
   </form>

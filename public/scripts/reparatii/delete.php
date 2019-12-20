@@ -13,16 +13,19 @@ if (isset($_POST['submit'])) {
     $connection = new PDO($dsn, $username, $password, $options);
   
     $nume = $_POST['nume'];
-    $prenume = $_POST['prenume'];
-    $nrtelefon = $_POST['nrtelefon'];
-    $success = "Client sters cu success.";
+    $marcamasina  = $_POST['marcamasina'];
+    $modelmasina  = $_POST['modelmasina'];
+    $success = "Reparatie stearsa cu success.";
 
-    $sql = "DELETE FROM client WHERE (nume = :nume OR prenume = :prenume) AND nrtelefon = :nrtelefon";
+    $sql = "DELETE FROM reparatii WHERE nume LIKE :nume AND idmasina = (SELECT id 
+                  FROM auto_list
+                  WHERE marca = :marcamasina
+                  AND model = :modelmasina)";
 
     $statement = $connection->prepare($sql);
     $statement->bindValue(':nume', $nume);
-    $statement->bindValue(':prenume', $prenume);
-    $statement->bindValue(':nrtelefon', $nrtelefon);
+    $statement->bindValue(':modelmasina', $modelmasina);
+    $statement->bindValue(':marcamasina', $marcamasina);
     $statement->execute();
 
     if (isset($_POST['submit']) && $statement->rowCount() > 0) { 
@@ -36,18 +39,18 @@ if (isset($_POST['submit'])) {
   }
 }?>
 
-<h2>Sterge client</h2>
+<h2>Sterge reparatie</h2>
 
  <form method="post">
     <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
     <label for="nume">Nume</label>
     <input type="text" name="nume" id="nume" required>
     <br>
-    <label for="prenume">Prenume</label>
-    <input type="text" name="prenume" id="prenume">
+    <label for="modelmasina">Model Masina</label>
+    <input type="text" name="modelmasina" id="modelmasina">
     <br>
-    <label for="nrtelefon">Nr. de Telefon</label>
-    <input type="text" name="nrtelefon" id="nrtelefon" required>
+    <label for="marcamasina">Marca Masina</label>
+    <input type="text" name="marcamasina" id="marcamasina" required>
     <br><br>
     <input type="submit" name="submit" value="Sterge">
   </form>

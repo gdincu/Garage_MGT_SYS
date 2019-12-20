@@ -12,23 +12,25 @@ if (isset($_POST['submit'])) {
     $connection = new PDO($dsn, $username, $password, $options);
 
     $nume = $_POST['nume'];
-    $prenume = $_POST['prenume'];
-    $nrtelefon = $_POST['nrtelefon'];
+    $marcamasina = $_POST['marcamasina'];
+    $modelmasina = $_POST['modelmasina'];
 
     $sql = "SELECT * 
-            FROM client 
+            FROM reparatii 
             WHERE nume LIKE :nume
-            AND prenume LIKE :prenume
-            AND nrtelefon LIKE :nrtelefon";
+            AND idmasina LIKE (SELECT DISTINCT id 
+                  FROM auto_list 
+                  WHERE marca = :marcamasina
+                  AND model = :modelmasina)";
     
     $statement = $connection->prepare($sql);
     $statement->bindParam(':nume', $nume, PDO::PARAM_STR);
-    $statement->bindParam(':prenume', $prenume, PDO::PARAM_STR);
-    $statement->bindParam(':nrtelefon', $nrtelefon, PDO::PARAM_STR);
+    $statement->bindParam(':modelmasina', $modelmasina, PDO::PARAM_STR);
+    $statement->bindParam(':marcamasina', $marcamasina, PDO::PARAM_STR);
 
     $statement->execute();
-
     $result = $statement->fetchAll();
+
   } catch(PDOException $error) {
       echo $sql . "<br>" . $error->getMessage();
   }
@@ -37,19 +39,16 @@ if (isset($_POST['submit'])) {
 <?php  
 if (isset($_POST['submit'])) {
   if ($result && $statement->rowCount() > 0) { ?>
-    <h2>Lista clienti conform criteriilor de cautare: </h2>
+    <h2>Lista piese conform criteriilor de cautare: </h2>
 
     <table>
       <thead>
         <tr>
           <th>#</th>
           <th>Nume</th>
-          <th>Prenume</th>
-          <th>Nr. Telefon</th>
-	     	  <th>Email</th>
-          <th>Adresa</th>
-          <th>Observatii</th>
-          <th>Data</th>
+          <th>ID masina</th>
+	     	  <th>Durata</th>
+          <th>Pret</th>
         </tr>
       </thead>
       <tbody>
@@ -57,12 +56,9 @@ if (isset($_POST['submit'])) {
         <tr>
           <td><?php echo escape($row["id"]); ?></td>
           <td><?php echo escape($row["nume"]); ?></td>
-          <td><?php echo escape($row["prenume"]); ?></td>
-          <td><?php echo escape($row["nrtelefon"]); ?></td>
-          <td><?php echo escape($row["email"]); ?></td>
-          <td><?php echo escape($row["adresa"]); ?></td>
-          <td><?php echo escape($row["observatii"]); ?> </td>
-		      <td><?php echo escape($row["date"]); ?> </td>		  
+          <td><?php echo escape($row["idmasina"]); ?></td>
+          <td><?php echo escape($row["durata"]); ?></td>
+          <td><?php echo escape($row["pret"]); ?></td>
         </tr>
       <?php endforeach; ?>
       </tbody>
@@ -80,11 +76,11 @@ if (isset($_POST['submit'])) {
   <label for="nume">Nume</label>
   <input type="text" id="nume" name="nume" value="%%">
   <br>
-  <label for="prenume">Prenume</label>
-  <input type="text" id="prenume" name="prenume" value="%%">
+  <label for="marcamasina">Marca</label>
+  <input type="text" id="marcamasina" name="marcamasina" value="%%">
   <br>
-  <label for="adresa">Nr. de Telefon</label>
-  <input type="text" id="nrtelefon" name="nrtelefon" value="%%">
+  <label for="modelmasina">Model</label>
+  <input type="text" id="modelmasina" name="modelmasina" value="%%">
   <br>
   <input type="submit" name="submit" value="Rezultate">
 </form>
