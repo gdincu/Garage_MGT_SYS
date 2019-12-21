@@ -14,7 +14,7 @@ if (isset($_POST['submit'])) {
   
     $nume = "%".$_POST['nume']."%";
     $marcamasina  = "%".$_POST['marcamasina']."%";
-    $modelmasina  = "%".$_POST['modelmasina']."%";
+    $modelmasina  = $_POST['modelmasina'];
     $success = "Reparatie stearsa cu success.";
 
     $sql = "DELETE FROM reparatii
@@ -22,7 +22,7 @@ if (isset($_POST['submit'])) {
             AND idmasina LIKE (SELECT id 
                             FROM auto_list
                             WHERE marca LIKE :marcamasina
-                            AND model LIKE :modelmasina)";
+                            AND model = :modelmasina)";
 
     $statement = $connection->prepare($sql);
     $statement->bindValue(':nume', $nume);
@@ -43,19 +43,33 @@ if (isset($_POST['submit'])) {
 
 <h2>Sterge reparatie</h2>
 
- <form method="post">
-    <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
-    <label for="nume">Nume</label>
-    <input type="text" name="nume" id="nume" required>
-    <br>
-    <label for="modelmasina">Model Masina</label>
-    <input type="text" name="modelmasina" id="modelmasina">
-    <br>
-    <label for="marcamasina">Marca Masina</label>
-    <input type="text" name="marcamasina" id="marcamasina" required>
-    <br><br>
-    <input type="submit" name="submit" value="Sterge">
-  </form>
+  <form method="post">
+  <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
+  
+  <div class="form-group">
+    
+    <p>
+    <div class="form-row">
+    <input type="text" class="form-control" id="nume" name="nume" placeholder="Nume exact sau partial. Se poate omite." required>
+    </div>
+    </p>
+
+    <p>
+    <div class="form-row">
+    <input type="text" class="form-control" id="marcamasina" name="marcamasina" placeholder="Marca exact sau partial. Se poate omite.">
+    </div>
+    </p>
+
+    <p>
+    <div class="form-row">
+    <input type="text" class="form-control" id="modelmasina" name="modelmasina" placeholder="Model exact. Nu se poate omite." required>
+    </div>
+    </p>
+    
+    <button type="submit" name="submit" class="btn btn-primary">Sterge</button>
+  
+  </div>
+</form>
 
 </div>
 

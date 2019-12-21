@@ -47,25 +47,43 @@ if (isset($_POST['submit'])) {
 
   <h2>Adauga reparatie</h2>
 
-  <form method="post">
-    <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
-    <label for="nume">Nume</label>
-    <input type="text" name="nume" id="nume" required>
-    <br>
-     <label for="marcamasina">Marca</label>
-    <input type="text" id="marcamasina" name="marcamasina">
-    <br>
-    <label for="modelmasina">Model</label>
-    <input type="text" id="modelmasina" name="modelmasina">
-    <br>
-    <label for="durata">Durata</label>
-    <input type="text" name="durata" id="durata" required>
-    <br>
-    <label for="pret">Pret</label>
-    <input type="text" name="pret" id="pret" required>
-    <br><br>
-    <input type="submit" name="submit" value="Salveaza">
-  </form>
+<form method="post">
+  <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
+  
+    <p>
+    <div class="form-row">
+    <div class="col">
+    <input type="text" class="form-control" id="marcamasina" name="marcamasina" placeholder="Marca masina">
+    </div>
+    <div class="col">
+    <input type="text" class="form-control" id="marcamasina" name="modelmasina" placeholder="Model masina">
+    </div>
+    </div>
+    </p>
+
+    <p>
+    <div class="form-row">
+    <div class="col">
+    <input type="text" class="form-control" id="nume" name="nume" placeholder="Nume Reparatie">
+    </div>
+    <div class="col">
+    <input type="text" class="form-control" id="durata" name="durata" placeholder="Durata">
+    </div>
+    <div class="col">
+    <input type="text" class="form-control" id="pret" name="pret" placeholder="Pret">
+    </div>
+    </div>
+    </p>
+
+    <div class="form-row">
+    <div class="col">
+    <button type="submit" name="submit" class="btn btn-primary">Adauga</button>
+    </div>
+    </div>
+    
+    
+  </div>
+</form>
 
 </div>
 <?php include "../../templates/footer_script.php"; ?>

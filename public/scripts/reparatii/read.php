@@ -1,6 +1,7 @@
 <?php include "../../templates/header_script.php"; ?>
 
 <div class="col-md-12 col-lg-12">
+
 <?php
 require "../config.php";
 require "../common.php";
@@ -15,8 +16,10 @@ if (isset($_POST['submit'])) {
     $marcamasina = "%".$_POST['marcamasina']."%";
     $modelmasina = "%".$_POST['modelmasina']."%";
 
-    $sql = "SELECT * 
-            FROM reparatii 
+    $sql = "SELECT a.id,a.nume,b.marca,b.model,a.durata,a.pret 
+            FROM reparatii a 
+            INNER JOIN auto_list b
+            ON b.id = a.idmasina
             WHERE nume LIKE :nume
             AND idmasina IN (SELECT DISTINCT id 
                   FROM auto_list 
@@ -36,17 +39,44 @@ if (isset($_POST['submit'])) {
   }
 }?>
    
+   <h2>Criterii cautare</h2>
+
+<form method="post">
+  <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
+  
+  <div class="form-group">
+    
+    <div class="form-row">
+    
+    <div class="col">
+    <input type="text" class="form-control" id="nume" name="nume" placeholder="Nume exact sau partial. Se poate omite.">
+    </div>
+    
+    <div class="col">
+    <input type="text" class="form-control" id="marcamasina" name="marcamasina" placeholder="Marca exact sau partial. Se poate omite.">
+    </div>
+    
+    <div class="col">
+    <input type="text" class="form-control" id="modelmasina" name="modelmasina" placeholder="Model exact sau partial. Se poate omite.">
+    </div>
+    
+    <button type="submit" name="submit" class="btn btn-primary">Rezultate</button>
+
+  </div>
+</form>
+
 <?php  
 if (isset($_POST['submit'])) {
   if ($result && $statement->rowCount() > 0) { ?>
     <h2>Lista piese conform criteriilor de cautare: </h2>
 
-    <table>
+    <table class="col">
       <thead>
         <tr>
           <th>#</th>
           <th>Nume</th>
-          <th>ID masina</th>
+          <th>Marca</th>
+          <th>Model</th>
 	     	  <th>Durata</th>
           <th>Pret</th>
         </tr>
@@ -56,7 +86,8 @@ if (isset($_POST['submit'])) {
         <tr>
           <td><?php echo escape($row["id"]); ?></td>
           <td><?php echo escape($row["nume"]); ?></td>
-          <td><?php echo escape($row["idmasina"]); ?></td>
+          <td><?php echo escape($row["marca"]); ?></td>
+          <td><?php echo escape($row["model"]); ?></td>
           <td><?php echo escape($row["durata"]); ?></td>
           <td><?php echo escape($row["pret"]); ?></td>
         </tr>
@@ -68,22 +99,8 @@ if (isset($_POST['submit'])) {
     <?php } 
 } ?> 
 
-<h2>Criterii cautare</h2>
 
-<form method="post">
-  <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
-  
-  <label for="nume">Nume</label>
-  <input type="text" id="nume" name="nume">
-  <br>
-  <label for="marcamasina">Marca</label>
-  <input type="text" id="marcamasina" name="marcamasina">
-  <br>
-  <label for="modelmasina">Model</label>
-  <input type="text" id="modelmasina" name="modelmasina">
-  <br>
-  <input type="submit" name="submit" value="Rezultate">
-</form>
+
 
 </div>
 

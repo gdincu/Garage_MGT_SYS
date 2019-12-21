@@ -44,7 +44,6 @@ if (isset($_POST['submit'])) {
 <form method="post">
   <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
   
-  <!-- <div class="form-group"> -->
     <p>
     <div class="form-row">
     <div class="col">
