@@ -38,22 +38,26 @@ if (isset($_POST['submit'])) {
 
 <form method="post">
   <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
-  <div class="form-row">
-    <div class="col">
-    <label for="nume">Nume</label>
-    <input type="text" class="form-control" id="nume" name="nume" placeholder="Nume exact sau partial. Se poate omite.">
-  </div>
-  <div class="col">
-<label for="prenume">Prenume</label>
-    <input type="text" class="form-control" id="prenume" name="prenume" placeholder="Prenume exact sau partial. Se poate omite.">
-  </div>
-  </div>
   
   <div class="form-group">
-    <label for="nrtelefon">Nr. de Telefon</label>
+    
+    <div class="form-row">
+    
+    <div class="col">
+    <input type="text" class="form-control" id="nume" name="nume" placeholder="Nume exact sau partial. Se poate omite.">
+    </div>
+    
+    <div class="col">
+    <input type="text" class="form-control" id="prenume" name="prenume" placeholder="Prenume exact sau partial. Se poate omite.">
+    </div>
+    
+    <div class="col">
     <input type="text" class="form-control" id="nrtelefon" name="nrtelefon" placeholder="Nr. de telefon exact sau partial. Se poate omite.">
+    </div>
+    
+    <button type="submit" name="submit" class="btn btn-primary">Rezultate</button>
+
   </div>
-  <button type="submit" name="submit" class="btn btn-primary">Rezultate</button>
 </form>
    
 <?php  
@@ -61,7 +65,7 @@ if (isset($_POST['submit'])) {
   if ($result && $statement->rowCount() > 0) { ?>
     <h2>Lista clienti conform criteriilor de cautare: </h2>
 
-    <table>
+    <table class="col">
       <thead>
         <tr>
           <th>#</th>

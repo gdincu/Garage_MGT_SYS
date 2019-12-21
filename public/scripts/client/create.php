@@ -43,26 +43,48 @@ if (isset($_POST['submit'])) {
 
 <form method="post">
   <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
-  <div class="form-row">
-  <input type="text" class="form-control" id="nume" name="nume" placeholder="Nume">
-  </div>
-  <div class="form-row">
-  <input type="text" class="form-control" id="prenume" name="prenume" placeholder="Prenume">
-  </div>
-  <div class="form-row">
-  <input type="text" class="form-control" id="nrtelefon" name="nrtelefon" placeholder="Nr. de telefon. Se poate omite.">
-  </div>
-  <div class="form-row">
-  <input type="text" class="form-control" id="email" name="email" placeholder="Adresa de email. Se poate omite.">
-  </div>
-  <div class="form-row">
-  <input type="text" class="form-control" id="adresa" name="adresa" placeholder="Adresa. Se poate omite.">  
-  </div>
-  <div class="form-row">
-  <input type="text" class="form-control" id="observatii" name="observatii" placeholder="Adresa. Se poate omite.">  
-  </div>
-  <div class="form-row">
-  <button type="submit" name="submit" class="btn btn-primary">Salveaza</button>
+  
+  <!-- <div class="form-group"> -->
+    <p>
+    <div class="form-row">
+    <div class="col">
+    <input type="text" class="form-control" id="nume" name="nume" placeholder="Nume">
+    </div>
+    <div class="col">
+    <input type="text" class="form-control" id="prenume" name="prenume" placeholder="Prenume">
+    </div>
+    </div>
+    </p>
+
+    <p>
+    <div class="form-row">
+    <div class="col">
+    <input type="text" class="form-control" id="nrtelefon" name="nrtelefon" placeholder="Nr. de telefon">
+    </div>
+    <div class="col">
+    <input type="text" class="form-control" id="email" name="email" placeholder="Email">
+    </div>
+    <div class="col">
+    <input type="text" class="form-control" id="adresa" name="adresa" placeholder="Adresa">
+    </div>
+    </div>
+    </p>
+
+    <p>
+    <div class="form-row">
+    <div class="col">
+    <input type="text" class="form-control" id="observatii" name="observatii" placeholder="Observatii">
+    </div>
+    </div>
+    </p>
+
+    <div class="form-row">
+    <div class="col">
+    <button type="submit" name="submit" class="btn btn-primary">Adauga</button>
+    </div>
+    </div>
+    
+    
   </div>
 </form>
   
