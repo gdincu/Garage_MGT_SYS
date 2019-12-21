@@ -12,15 +12,17 @@ if (isset($_POST['submit'])) {
   try {
     $connection = new PDO($dsn, $username, $password, $options);
   
-    $nume = $_POST['nume'];
-    $marcamasina  = $_POST['marcamasina'];
-    $modelmasina  = $_POST['modelmasina'];
+    $nume = "%".$_POST['nume']."%";
+    $marcamasina  = "%".$_POST['marcamasina']."%";
+    $modelmasina  = "%".$_POST['modelmasina']."%";
     $success = "Reparatie stearsa cu success.";
 
-    $sql = "DELETE FROM reparatii WHERE nume LIKE :nume AND idmasina = (SELECT id 
-                  FROM auto_list
-                  WHERE marca = :marcamasina
-                  AND model = :modelmasina)";
+    $sql = "DELETE FROM reparatii
+            WHERE nume LIKE :nume 
+            AND idmasina LIKE (SELECT id 
+                            FROM auto_list
+                            WHERE marca LIKE :marcamasina
+                            AND model LIKE :modelmasina)";
 
     $statement = $connection->prepare($sql);
     $statement->bindValue(':nume', $nume);

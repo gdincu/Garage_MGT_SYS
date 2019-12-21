@@ -12,8 +12,8 @@ if (isset($_POST['submit'])) {
   try  {
     $connection = new PDO($dsn, $username, $password, $options);
     
-    $marcamasina  = $_POST['marcamasina'];
-    $modelmasina  = $_POST['modelmasina'];
+    $marcamasina  = "%".$_POST['marcamasina']."%";
+    $modelmasina  = "%".$_POST['modelmasina']."%";
     $nume         = $_POST['nume'];
     $durata       = $_POST['durata'];
     $pret         = $_POST['pret'];
@@ -23,8 +23,8 @@ if (isset($_POST['submit'])) {
             (nume,durata,pret,idmasina) 
             (SELECT :nume , :durata , :pret , id 
                   FROM auto_list
-                  WHERE marca = :marcamasina
-                  AND model = :modelmasina)";
+                  WHERE marca LIKE :marcamasina
+                  AND model LIKE :modelmasina)";
 
 
     $statement = $connection->prepare($sql);
@@ -53,10 +53,10 @@ if (isset($_POST['submit'])) {
     <input type="text" name="nume" id="nume" required>
     <br>
      <label for="marcamasina">Marca</label>
-    <input type="text" id="marcamasina" name="marcamasina" value="%%">
+    <input type="text" id="marcamasina" name="marcamasina">
     <br>
     <label for="modelmasina">Model</label>
-    <input type="text" id="modelmasina" name="modelmasina" value="%%">
+    <input type="text" id="modelmasina" name="modelmasina">
     <br>
     <label for="durata">Durata</label>
     <input type="text" name="durata" id="durata" required>

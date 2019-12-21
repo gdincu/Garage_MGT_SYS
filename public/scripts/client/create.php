@@ -39,30 +39,32 @@ if (isset($_POST['submit'])) {
     <blockquote><?php echo escape($_POST['prenume']); ?> adaugat cu success.</blockquote>
   <?php endif; ?>
 
-  <h2>Adauga client</h2>
+<h2>Adauga client</h2>
 
-  <form method="post">
-    <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
-    <label for="nume">Nume</label>
-    <input type="text" name="nume" id="nume" required>
-    <br>
-    <label for="prenume">Prenume</label>
-    <input type="text" name="prenume" id="prenume" required>
-    <br>
-    <label for="nrtelefon">Nr. de Telefon</label>
-    <input type="text" name="nrtelefon" id="nrtelefon" required>
-    <br>
-    <label for="email">Email</label>
-    <input type="text" name="email" id="email">
-    <br>
-    <label for="adresa">Adresa</label>
-    <input type="text" name="adresa" id="adresa">
-    <br>
-    <label for="observatii">Observatii</label>
-    <input type="text" name="observatii" id="observatii">
-    <br><br>
-    <input type="submit" name="submit" value="Salveaza">
-  </form>
-
+<form method="post">
+  <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
+  <div class="form-row">
+  <input type="text" class="form-control" id="nume" name="nume" placeholder="Nume">
+  </div>
+  <div class="form-row">
+  <input type="text" class="form-control" id="prenume" name="prenume" placeholder="Prenume">
+  </div>
+  <div class="form-row">
+  <input type="text" class="form-control" id="nrtelefon" name="nrtelefon" placeholder="Nr. de telefon. Se poate omite.">
+  </div>
+  <div class="form-row">
+  <input type="text" class="form-control" id="email" name="email" placeholder="Adresa de email. Se poate omite.">
+  </div>
+  <div class="form-row">
+  <input type="text" class="form-control" id="adresa" name="adresa" placeholder="Adresa. Se poate omite.">  
+  </div>
+  <div class="form-row">
+  <input type="text" class="form-control" id="observatii" name="observatii" placeholder="Adresa. Se poate omite.">  
+  </div>
+  <div class="form-row">
+  <button type="submit" name="submit" class="btn btn-primary">Salveaza</button>
+  </div>
+</form>
+  
 </div>
 <?php include "../../templates/footer_script.php"; ?>

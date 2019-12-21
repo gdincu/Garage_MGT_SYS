@@ -12,12 +12,12 @@ if (isset($_POST['submit'])) {
   try {
     $connection = new PDO($dsn, $username, $password, $options);
   
-    $nume = $_POST['nume'];
-    $prenume = $_POST['prenume'];
+    $nume = "%".$_POST['nume']."%";
+    $prenume = "%".$_POST['prenume']."%";
     $nrtelefon = $_POST['nrtelefon'];
     $success = "Client sters cu success.";
 
-    $sql = "DELETE FROM client WHERE (nume = :nume OR prenume = :prenume) AND nrtelefon = :nrtelefon";
+    $sql = "DELETE FROM client WHERE (nume LIKE :nume OR prenume LIKE :prenume) AND nrtelefon = :nrtelefon";
 
     $statement = $connection->prepare($sql);
     $statement->bindValue(':nume', $nume);
@@ -41,13 +41,13 @@ if (isset($_POST['submit'])) {
  <form method="post">
     <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
     <label for="nume">Nume</label>
-    <input type="text" name="nume" id="nume" required>
+    <input type="text" name="nume" id="nume" placeholder="Nume exact sau partial. Se poate omite." size=50>
     <br>
     <label for="prenume">Prenume</label>
-    <input type="text" name="prenume" id="prenume">
+    <input type="text" name="prenume" id="prenume" placeholder="Prenume exact sau partial. Se poate omite." size=50>
     <br>
     <label for="nrtelefon">Nr. de Telefon</label>
-    <input type="text" name="nrtelefon" id="nrtelefon" required>
+    <input type="text" name="nrtelefon" id="nrtelefon" placeholder="Nr. de telefon exact. Nu se poate omite." size=50 required>
     <br><br>
     <input type="submit" name="submit" value="Sterge">
   </form>

@@ -11,17 +11,17 @@ if (isset($_POST['submit'])) {
   try  {
     $connection = new PDO($dsn, $username, $password, $options);
 
-    $nume = $_POST['nume'];
-    $marcamasina = $_POST['marcamasina'];
-    $modelmasina = $_POST['modelmasina'];
+    $nume = "%".$_POST['nume']."%";
+    $marcamasina = "%".$_POST['marcamasina']."%";
+    $modelmasina = "%".$_POST['modelmasina']."%";
 
     $sql = "SELECT * 
             FROM reparatii 
             WHERE nume LIKE :nume
-            AND idmasina LIKE (SELECT DISTINCT id 
+            AND idmasina IN (SELECT DISTINCT id 
                   FROM auto_list 
-                  WHERE marca = :marcamasina
-                  AND model = :modelmasina)";
+                  WHERE marca LIKE :marcamasina
+                  AND model LIKE :modelmasina)";
     
     $statement = $connection->prepare($sql);
     $statement->bindParam(':nume', $nume, PDO::PARAM_STR);
@@ -74,13 +74,13 @@ if (isset($_POST['submit'])) {
   <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
   
   <label for="nume">Nume</label>
-  <input type="text" id="nume" name="nume" value="%%">
+  <input type="text" id="nume" name="nume">
   <br>
   <label for="marcamasina">Marca</label>
-  <input type="text" id="marcamasina" name="marcamasina" value="%%">
+  <input type="text" id="marcamasina" name="marcamasina">
   <br>
   <label for="modelmasina">Model</label>
-  <input type="text" id="modelmasina" name="modelmasina" value="%%">
+  <input type="text" id="modelmasina" name="modelmasina">
   <br>
   <input type="submit" name="submit" value="Rezultate">
 </form>
