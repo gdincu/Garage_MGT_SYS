@@ -13,7 +13,7 @@ if (isset($_POST['submit'])) {
     $connection = new PDO($dsn, $username, $password, $options);
     
     $marcamasina  = "%".$_POST['marcamasina']."%";
-    $modelmasina  = "%".$_POST['modelmasina']."%";
+    $modelmasina  = $_POST['modelmasina'];
     $nume         = $_POST['nume'];
     $durata       = $_POST['durata'];
     $pret         = $_POST['pret'];
@@ -24,7 +24,7 @@ if (isset($_POST['submit'])) {
             (SELECT :nume , :durata , :pret , id 
                   FROM auto_list
                   WHERE marca LIKE :marcamasina
-                  AND model LIKE :modelmasina)";
+                  AND model = :modelmasina)";
 
 
     $statement = $connection->prepare($sql);
@@ -53,10 +53,10 @@ if (isset($_POST['submit'])) {
     <p>
     <div class="form-row">
     <div class="col">
-    <input type="text" class="form-control" id="marcamasina" name="marcamasina" placeholder="Marca masina">
+    <input type="text" class="form-control" id="marcamasina" name="marcamasina" placeholder="Marca masina exact sau aproximativ. Se poate omite.">
     </div>
     <div class="col">
-    <input type="text" class="form-control" id="marcamasina" name="modelmasina" placeholder="Model masina">
+    <input type="text" class="form-control" id="marcamasina" name="modelmasina" placeholder="Model masina exact. Nu se poate omite." required>
     </div>
     </div>
     </p>
@@ -64,13 +64,13 @@ if (isset($_POST['submit'])) {
     <p>
     <div class="form-row">
     <div class="col">
-    <input type="text" class="form-control" id="nume" name="nume" placeholder="Nume Reparatie">
+    <input type="text" class="form-control" id="nume" name="nume" placeholder="Nume Reparatie. Nu se poate omite." required>
     </div>
     <div class="col">
-    <input type="text" class="form-control" id="durata" name="durata" placeholder="Durata">
+    <input type="text" class="form-control" id="durata" name="durata" placeholder="Durata. Se poate omite.">
     </div>
     <div class="col">
-    <input type="text" class="form-control" id="pret" name="pret" placeholder="Pret">
+    <input type="text" class="form-control" id="pret" name="pret" placeholder="Pret. Nu se poate omite." required>
     </div>
     </div>
     </p>

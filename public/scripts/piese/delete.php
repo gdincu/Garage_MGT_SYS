@@ -12,17 +12,25 @@ if (isset($_POST['submit'])) {
   try {
     $connection = new PDO($dsn, $username, $password, $options);
   
-    $id = $_POST['id'];
     $nume = $_POST['nume'];
-    $producator = $_POST['producator'];
-	$success = "Piesa stearsa cu succes.";
+    $producator = "%" . $_POST['producator'] . "%";
+    $marcamasina = "%" . $_POST['marcamasina'] . "%";
+    $modelmasina = $_POST['modelmasina'];
+	  $success = $_POST['nume'] . " pentru " . $_POST['marcamasina'] . " " .  $_POST['modelmasina'] ." sters cu succes.";
 
-    $sql = "DELETE FROM piese WHERE (nume = :nume AND producator = :producator) AND id = :id";
+    $sql = "DELETE FROM piese 
+            WHERE nume = :nume 
+            AND producator LIKE :producator
+            AND idmasina = (SELECT id
+                            FROM auto_list
+                            WHERE marca LIKE :marcamasina
+                            AND model = :modelmasina)";
 
     $statement = $connection->prepare($sql);
     $statement->bindValue(':nume', $nume);
     $statement->bindValue(':producator', $producator);
-    $statement->bindValue(':id', $id);
+    $statement->bindValue(':marcamasina', $nume);
+    $statement->bindValue(':modelmasina', $nume);
     $statement->execute();
 
     if (isset($_POST['submit']) && $statement->rowCount() > 0) { 
@@ -38,34 +46,40 @@ if (isset($_POST['submit'])) {
 
 <h2>Sterge client</h2>
 
- <form method="post">
-    <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
-    <label for="id">ID Piesa</label>
-    <input type="text" name="id" id="nume" id >
-    <br>
-	<label for="nume">Nume</label>
-    <input type="text" name="nume" id="nume" required>
-    <br>
-    <label for="producator">Producator</label>
-    <input type="text" name="producator" id="producator" required>
-    <br><br>
-    <input type="submit" name="submit" value="Sterge">
-  </form>
+<form method="post">
+  <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
+  
+    <p>
+    <div class="form-row">
+    <div class="col">
+    <input type="text" class="form-control" id="nume" name="nume" placeholder="Nume piesa exact sau aproximativ. Nu poate fi omis.">
+    </div>
+    <div class="col">
+    <input type="text" class="form-control" id="producator" name="producator" placeholder="Producator piesa. Poate fi omis.">
+    </div>
+    </div>
+    </p>
+
+    <p>
+    <div class="form-row">
+    <div class="col">
+    <input type="text" class="form-control" id="marcamasina" name="marcamasina" placeholder="Marca masina exact sau aproximativ. Se poate omite.">
+    </div>
+    <div class="col">
+    <input type="text" class="form-control" id="modelmasina" name="modelmasina" placeholder="Model masina exact. Nu se poate omite." required>
+    </div>
+    </div>
+    </p>
+
+    <div class="form-row">
+    <div class="col">
+    <button type="submit" name="submit" class="btn btn-primary">Sterge</button>
+    </div>
+    </div>
+        
+  </div>
+</form>
 
 </div>
-
-  <!-- Bootstrap core JavaScript -->
-  <script src="../../vendor/jquery/jquery.min.js"></script>
-  <script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-  <!-- Plugin JavaScript -->
-  <script src="../../vendor/jquery-easing/jquery.easing.min.js"></script>
-
-  <!-- Contact Form JavaScript -->
-  <script src="../../js/jqBootstrapValidation.js"></script>
-  <script src="../../js/contact_me.js"></script>
-
-  <!-- Custom scripts for this template -->
-  <script src="../../js/freelancer.min.js"></script>
 
 <?php include "../../templates/footer_script.php"; ?>

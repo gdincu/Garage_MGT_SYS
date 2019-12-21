@@ -12,61 +12,104 @@ if (isset($_POST['submit'])) {
   try  {
     $connection = new PDO($dsn, $username, $password, $options);
     
-    $new_user = array(
-      "nume" => $_POST['nume'],
-      "producator"  => $_POST['producator'],
-      "idmasina"     => $_POST['idmasina'],
-      "costachizitie"       => $_POST['costachizitie'],
-      "costvanzare"  => $_POST['costvanzare'],
-      "cantitate"  => $_POST['cantitate'],
-	  "observatii"  => $_POST['observatii']
-    );
+    $nume = $_POST['nume'];
+    $producator  = $_POST['producator'];
+    $marcamasina = $_POST['marcamasina'];
+    $modelmasina = $_POST['modelmasina'];
+    $costachizitie = $_POST['costachizitie'];
+    $costvanzare = $_POST['costvanzare'];
+    $cantitate  = $_POST['cantitate'];
+	  $observatii = $_POST['observatii'];
 
-    $sql = sprintf(
-      "INSERT INTO %s (%s) values (%s)",
-      "piese","nume,producator,idmasina,costachizitie,costvanzare,cantitate,observatii",
-      ":" . implode(", :", array_keys($new_user))
-    );
+      $sql = "INSERT INTO piese 
+      (nume,producator,costachizitie,costvanzare,cantitate,observatii,idmasina) 
+      (SELECT :nume,:producator,:costachizitie,:costvanzare,:cantitate,:observatii,id 
+            FROM auto_list
+            WHERE marca LIKE :marcamasina
+            AND model = :modelmasina)";  
     
     $statement = $connection->prepare($sql);
-    $statement->execute($new_user);
+    $statement->bindParam(':modelmasina', $modelmasina, PDO::PARAM_STR);
+    $statement->bindParam(':marcamasina', $marcamasina, PDO::PARAM_STR);
+    $statement->bindParam(':nume', $nume, PDO::PARAM_STR);
+    $statement->bindParam(':producator', $producator, PDO::PARAM_STR);
+    $statement->bindParam(':costachizitie', $costachizitie, PDO::PARAM_STR);
+    $statement->bindParam(':costvanzare', $costvanzare, PDO::PARAM_STR);
+    $statement->bindParam(':cantitate', $cantitate, PDO::PARAM_STR);
+    $statement->bindParam(':observatii', $observatii, PDO::PARAM_STR);
+    $statement->execute();
+    $success = $_POST['nume'] . " pentru " . $_POST['marcamasina'] . " " . $_POST['modelmasina'] . " adaugat cu success.";
+
+    if (isset($_POST['submit']) && $statement->rowCount() > 0) { 
+      echo $success; 
+    } else {
+      echo "Mai incearca!";
+    }
+
   } catch(PDOException $error) {
       echo $sql . "<br>" . $error->getMessage();
   }
 }
 ?>
 
-  <?php if (isset($_POST['submit']) && $statement) : ?>
-    <blockquote><?php echo escape($_POST['nume']); ?> adaugat cu success.</blockquote>
-  <?php endif; ?>
-
   <h2>Adauga piesa</h2>
 
   <form method="post">
-    <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
-    <label for="nume">Nume</label>
-    <input type="text" name="nume" id="nume" required>
-    <br>
-    <label for="producator">Producator</label>
-    <input type="text" name="producator" id="producator" required>
-    <br>
-    <label for="idmasina">ID Masina</label>
-    <input type="text" name="idmasina" id="idmasina" required>
-    <br>
-    <label for="costachizitie">Cost Achizitie</label>
-    <input type="text" name="costachizitie" id="costachizitie">
-    <br>
-    <label for="costvanzare">Cost Vanzare</label>
-    <input type="text" name="costvanzare" id="costvanzare">
-    <br>
-	<label for="cantitate">Cantitate</label>
-    <input type="text" name="cantitate" id="cantitate">
-    <br>
-    <label for="observatii">Observatii</label>
-    <input type="text" name="observatii" id="observatii">
-    <br><br>
-    <input type="submit" name="submit" value="Salveaza">
-  </form>
+  <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
+  
+    <p>
+    <div class="form-row">
+    <div class="col">
+    <input type="text" class="form-control" id="nume" name="nume" placeholder="Nume piesa">
+    </div>
+    <div class="col">
+    <input type="text" class="form-control" id="producator" name="producator" placeholder="Producator piesa">
+    </div>
+    </div>
+    </p>
+
+    <p>
+    <div class="form-row">
+    <div class="col">
+    <input type="text" class="form-control" id="marcamasina" name="marcamasina" placeholder="Marca masina exact sau aproximativ. Se poate omite.">
+    </div>
+    <div class="col">
+    <input type="text" class="form-control" id="modelmasina" name="modelmasina" placeholder="Model masina exact. Nu se poate omite." required>
+    </div>
+    </div>
+    </p>
+
+    <p>
+    <div class="form-row">
+    <div class="col">
+    <input type="text" class="form-control" id="costachizitie" name="costachizitie" placeholder="Cost achizitie.">
+    </div>
+    <div class="col">
+    <input type="text" class="form-control" id="costvanzare" name="costvanzare" placeholder="Cost vanzare.">
+    </div>
+    <div class="col">
+    <input type="text" class="form-control" id="cantitate" name="cantitate" placeholder="Cantitate">
+    </div>
+    </div>
+    </p>
+
+    <p>
+    <div class="form-row">
+    <div class="col">
+    <input type="text" class="form-control" id="observatii" name="observatii" placeholder="Observatii">
+    </div>
+    </div>
+    </p>
+
+    <div class="form-row">
+    <div class="col">
+    <button type="submit" name="submit" class="btn btn-primary">Adauga</button>
+    </div>
+    </div>
+    
+    
+  </div>
+</form>
 
 </div>
 <?php include "../../templates/footer_script.php"; ?>

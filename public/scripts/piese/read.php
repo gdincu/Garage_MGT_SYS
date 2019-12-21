@@ -11,38 +11,75 @@ if (isset($_POST['submit'])) {
   try  {
     $connection = new PDO($dsn, $username, $password, $options);
 
-    $id = $_POST['id'];
-	$idmasina = $_POST['idmasina'];
-	$nume = $_POST['nume'];
-    $producator = $_POST['producator'];
+	$nume = "%" . $_POST['nume'] . "%";
+  $producator = "%" . $_POST['producator'] . "%";
+  $marcamasina = "%" . $_POST['marcamasina'] . "%";
+  $modelmasina = "%" . $_POST['modelmasina'] . "%";
 
     $sql = "SELECT * 
             FROM piese 
-            WHERE id LIKE :id
-			AND idmasina LIKE :idmasina
-            AND nume LIKE :nume
-            AND producator LIKE :producator";
+            WHERE nume LIKE :nume
+            AND producator LIKE :producator
+            AND idmasina IN (SELECT id
+                            FROM auto_list
+                            WHERE marca LIKE :marcamasina
+                            AND model LIKE :modelmasina)";
     
     $statement = $connection->prepare($sql);
-    $statement->bindParam(':id', $id, PDO::PARAM_STR);
-	$statement->bindParam(':idmasina', $idmasina, PDO::PARAM_STR);
+    $statement->bindParam(':marcamasina', $marcamasina, PDO::PARAM_STR);
+	  $statement->bindParam(':modelmasina', $modelmasina, PDO::PARAM_STR);
     $statement->bindParam(':nume', $nume, PDO::PARAM_STR);
     $statement->bindParam(':producator', $producator, PDO::PARAM_STR);
-
     $statement->execute();
-
     $result = $statement->fetchAll();
+
+    if (isset($_POST['submit']) && $statement->rowCount() <= 0)
+      echo "Mai incearca!";
+
   } catch(PDOException $error) {
       echo $sql . "<br>" . $error->getMessage();
   }
 }?>
    
+   <h2>Criterii cautare</h2>
+
+<form method="post">
+  <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
+  
+    <p>
+    <div class="form-row">
+    <div class="col">
+    <input type="text" class="form-control" id="nume" name="nume" placeholder="Nume exact sau partial. Se poate omite.">
+    </div>
+    <div class="col">
+    <input type="text" class="form-control" id="producator" name="producator" placeholder="Nume producator. Se poate omite.">
+    </div>  
+    </div>
+    </p>
+
+    <p>
+    <div class="form-row">  
+    <div class="col">
+    <input type="text" class="form-control" id="marcamasina" name="marcamasina" placeholder="Marca exact sau partial. Se poate omite.">
+    </div>
+    <div class="col">
+    <input type="text" class="form-control" id="modelmasina" name="modelmasina" placeholder="Model exact sau partial. Se poate omite.">
+    </div>
+    </div>
+    </p>
+    
+    <button type="submit" name="submit" class="btn btn-primary">Rezultate</button>
+
+  </div>
+</form>
+
+
 <?php  
 if (isset($_POST['submit'])) {
   if ($result && $statement->rowCount() > 0) { ?>
     <h2>Lista piese conform criteriilor de cautare: </h2>
-
-    <table>
+    
+    <table class="col">
       <thead>
         <tr>
           <th>#</th>
@@ -74,26 +111,6 @@ if (isset($_POST['submit'])) {
       <blockquote>No results found.</blockquote>
     <?php } 
 } ?> 
-
-<h2>Criterii cautare</h2>
-
-<form method="post">
-  <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
-  
-  <label for="nume">ID</label>
-  <input type="text" id="id" name="id" value="%%">
-  <br>
-  <label for="nume">ID Masina</label>
-  <input type="text" id="idmasina" name="idmasina" value="%%">
-  <br>
-  <label for="nume">Nume</label>
-  <input type="text" id="nume" name="nume" value="%%">
-  <br>
-  <label for="prenume">Producator</label>
-  <input type="text" id="producator" name="producator" value="%%">
-  <br>
-  <input type="submit" name="submit" value="Rezultate">
-</form>
 
 </div>
 
