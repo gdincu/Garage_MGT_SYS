@@ -16,10 +16,10 @@ if (isset($_POST['submit'])) {
     $producator = "%" . $_POST['producator'] . "%";
     $marcamasina = "%" . $_POST['marcamasina'] . "%";
     $modelmasina = $_POST['modelmasina'];
-	  $success = $_POST['nume'] . " pentru " . $_POST['marcamasina'] . " " .  $_POST['modelmasina'] ." sters cu succes.";
+	  $success = $_POST['nume'] . " - Piesa stearsa cu succes.";
 
     $sql = "DELETE FROM piese 
-            WHERE nume = :nume 
+            WHERE nume = :nume
             AND producator LIKE :producator
             AND idmasina = (SELECT id
                             FROM auto_list
@@ -29,8 +29,8 @@ if (isset($_POST['submit'])) {
     $statement = $connection->prepare($sql);
     $statement->bindValue(':nume', $nume);
     $statement->bindValue(':producator', $producator);
-    $statement->bindValue(':marcamasina', $nume);
-    $statement->bindValue(':modelmasina', $nume);
+    $statement->bindValue(':marcamasina', $marcamasina);
+    $statement->bindValue(':modelmasina', $modelmasina);
     $statement->execute();
 
     if (isset($_POST['submit']) && $statement->rowCount() > 0) { 
@@ -44,7 +44,7 @@ if (isset($_POST['submit'])) {
   }
 }?>
 
-<h2>Sterge client</h2>
+<h2>Sterge piesa</h2>
 
 <form method="post">
   <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
@@ -52,7 +52,7 @@ if (isset($_POST['submit'])) {
     <p>
     <div class="form-row">
     <div class="col">
-    <input type="text" class="form-control" id="nume" name="nume" placeholder="Nume piesa exact sau aproximativ. Nu poate fi omis.">
+    <input type="text" class="form-control" id="nume" name="nume" placeholder="Nume piesa exact. Nu poate fi omis." required>
     </div>
     <div class="col">
     <input type="text" class="form-control" id="producator" name="producator" placeholder="Producator piesa. Poate fi omis.">

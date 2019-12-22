@@ -47,10 +47,10 @@ if (isset($_POST['submit'])) {
     <p>
     <div class="form-row">
     <div class="col">
-    <input type="text" class="form-control" id="nume" name="nume" placeholder="Nume">
+    <input type="text" class="form-control" id="nume" name="nume" placeholder="Nume. Nu se poate omite." required>
     </div>
     <div class="col">
-    <input type="text" class="form-control" id="prenume" name="prenume" placeholder="Prenume">
+    <input type="text" class="form-control" id="prenume" name="prenume" placeholder="Prenume. Nu se poate omite." required>
     </div>
     </div>
     </p>
@@ -58,13 +58,13 @@ if (isset($_POST['submit'])) {
     <p>
     <div class="form-row">
     <div class="col">
-    <input type="text" class="form-control" id="nrtelefon" name="nrtelefon" placeholder="Nr. de telefon">
+    <input type="tel" class="form-control" id="nrtelefon" name="nrtelefon" placeholder="Nr. de telefon. Nu se poate omite." required>
     </div>
     <div class="col">
-    <input type="text" class="form-control" id="email" name="email" placeholder="Email">
+    <input type="email" class="form-control" id="email" name="email" placeholder="Email. Se poate omite.">
     </div>
     <div class="col">
-    <input type="text" class="form-control" id="adresa" name="adresa" placeholder="Adresa">
+    <input type="text" class="form-control" id="adresa" name="adresa" placeholder="Adresa. Se poate omite.">
     </div>
     </div>
     </p>
@@ -72,7 +72,7 @@ if (isset($_POST['submit'])) {
     <p>
     <div class="form-row">
     <div class="col">
-    <input type="text" class="form-control" id="observatii" name="observatii" placeholder="Observatii">
+    <input type="text" class="form-control" id="observatii" name="observatii" placeholder="Observatii. Se poate omite.">
     </div>
     </div>
     </p>

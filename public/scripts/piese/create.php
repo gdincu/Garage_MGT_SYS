@@ -14,12 +14,12 @@ if (isset($_POST['submit'])) {
     
     $nume = $_POST['nume'];
     $producator  = $_POST['producator'];
-    $marcamasina = $_POST['marcamasina'];
+    $marcamasina = "%" . $_POST['marcamasina'] . "%";
     $modelmasina = $_POST['modelmasina'];
     $costachizitie = $_POST['costachizitie'];
     $costvanzare = $_POST['costvanzare'];
     $cantitate  = $_POST['cantitate'];
-	  $observatii = $_POST['observatii'];
+	  $observatii = "%" . $_POST['observatii'] . "%";
 
       $sql = "INSERT INTO piese 
       (nume,producator,costachizitie,costvanzare,cantitate,observatii,idmasina) 
@@ -60,10 +60,10 @@ if (isset($_POST['submit'])) {
     <p>
     <div class="form-row">
     <div class="col">
-    <input type="text" class="form-control" id="nume" name="nume" placeholder="Nume piesa">
+    <input type="text" class="form-control" id="nume" name="nume" placeholder="Nume piesa. Nu se poate omite." required>
     </div>
     <div class="col">
-    <input type="text" class="form-control" id="producator" name="producator" placeholder="Producator piesa">
+    <input type="text" class="form-control" id="producator" name="producator" placeholder="Producator piesa. Nu se poate omite." required>
     </div>
     </div>
     </p>
@@ -82,13 +82,13 @@ if (isset($_POST['submit'])) {
     <p>
     <div class="form-row">
     <div class="col">
-    <input type="text" class="form-control" id="costachizitie" name="costachizitie" placeholder="Cost achizitie.">
+    <input type="text" class="form-control" id="costachizitie" name="costachizitie" placeholder="Cost achizitie. Nu se poate omite." required>
     </div>
     <div class="col">
-    <input type="text" class="form-control" id="costvanzare" name="costvanzare" placeholder="Cost vanzare.">
+    <input type="text" class="form-control" id="costvanzare" name="costvanzare" placeholder="Cost vanzare. Nu se poate omite." required>
     </div>
     <div class="col">
-    <input type="text" class="form-control" id="cantitate" name="cantitate" placeholder="Cantitate">
+    <input type="text" class="form-control" id="cantitate" name="cantitate" placeholder="Cantitate. Nu se poate omite." required>
     </div>
     </div>
     </p>
@@ -96,7 +96,7 @@ if (isset($_POST['submit'])) {
     <p>
     <div class="form-row">
     <div class="col">
-    <input type="text" class="form-control" id="observatii" name="observatii" placeholder="Observatii">
+    <input type="text" class="form-control" id="observatii" name="observatii" placeholder="Observatii. Se pot omite.">
     </div>
     </div>
     </p>

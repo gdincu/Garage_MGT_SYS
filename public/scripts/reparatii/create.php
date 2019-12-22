@@ -17,6 +17,7 @@ if (isset($_POST['submit'])) {
     $nume         = $_POST['nume'];
     $durata       = $_POST['durata'];
     $pret         = $_POST['pret'];
+    $success      = $_POST['nume'] . " pentru " . $_POST['marcamasina'] . " " . $_POST['modelmasina'] . " adaugat(a) cu succes.";
 
 
     $sql = "INSERT INTO reparatii 
@@ -35,15 +36,17 @@ if (isset($_POST['submit'])) {
     $statement->bindParam(':pret', $pret, PDO::PARAM_STR);
     $statement->execute();
 
+    if (isset($_POST['submit']) && $statement->rowCount() > 0) { 
+      echo $success; 
+    } else {
+      echo "Mai incearca!";
+    }
+
   } catch(PDOException $error) {
       echo $sql . "<br>" . $error->getMessage();
   }
 }
 ?>
-
-  <?php if (isset($_POST['submit']) && $statement) : ?>
-    <blockquote><?php echo escape($_POST['nume']); ?> adaugat cu success.</blockquote>
-  <?php endif; ?>
 
   <h2>Adauga reparatie</h2>
 

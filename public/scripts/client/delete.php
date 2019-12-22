@@ -17,7 +17,9 @@ if (isset($_POST['submit'])) {
     $nrtelefon = $_POST['nrtelefon'];
     $success = "Client sters cu success.";
 
-    $sql = "DELETE FROM client WHERE (nume LIKE :nume OR prenume LIKE :prenume) AND nrtelefon = :nrtelefon";
+    $sql = "DELETE FROM client 
+            WHERE (nume LIKE :nume OR prenume LIKE :prenume) 
+            AND nrtelefon = :nrtelefon";
 
     $statement = $connection->prepare($sql);
     $statement->bindValue(':nume', $nume);
@@ -57,7 +59,7 @@ if (isset($_POST['submit'])) {
 
     <p>
     <div class="form-row">
-    <input type="text" class="form-control" id="nrtelefon" name="nrtelefon" placeholder="Nr. de telefon exact. Nu se poate omite.">
+    <input type="tel" class="form-control" id="nrtelefon" name="nrtelefon" placeholder="Nr. de telefon exact. Nu se poate omite." required>
     </div>
     </p>
     
@@ -67,19 +69,5 @@ if (isset($_POST['submit'])) {
 </form>
 
 </div>
-
-  <!-- Bootstrap core JavaScript -->
-  <script src="../../vendor/jquery/jquery.min.js"></script>
-  <script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-  <!-- Plugin JavaScript -->
-  <script src="../../vendor/jquery-easing/jquery.easing.min.js"></script>
-
-  <!-- Contact Form JavaScript -->
-  <script src="../../js/jqBootstrapValidation.js"></script>
-  <script src="../../js/contact_me.js"></script>
-
-  <!-- Custom scripts for this template -->
-  <script src="../../js/freelancer.min.js"></script>
 
 <?php include "../../templates/footer_script.php"; ?>

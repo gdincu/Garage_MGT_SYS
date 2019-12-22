@@ -16,8 +16,10 @@ if (isset($_POST['submit'])) {
   $marcamasina = "%" . $_POST['marcamasina'] . "%";
   $modelmasina = "%" . $_POST['modelmasina'] . "%";
 
-    $sql = "SELECT * 
-            FROM piese 
+    $sql = "SELECT a.*,b.marca,b.model
+            FROM piese a
+            INNER JOIN auto_list b ON  
+            b.id = a.idmasina
             WHERE nume LIKE :nume
             AND producator LIKE :producator
             AND idmasina IN (SELECT id
@@ -85,7 +87,8 @@ if (isset($_POST['submit'])) {
           <th>#</th>
           <th>Nume</th>
           <th>Producator</th>
-          <th>ID masina</th>
+          <th>Marca masina</th>
+          <th>Model masina</th>
 	     	  <th>Cost Achizitie</th>
           <th>Cost Vanzare</th>
           <th>Cantitate</th>
@@ -98,7 +101,8 @@ if (isset($_POST['submit'])) {
           <td><?php echo escape($row["id"]); ?></td>
           <td><?php echo escape($row["nume"]); ?></td>
           <td><?php echo escape($row["producator"]); ?></td>
-          <td><?php echo escape($row["idmasina"]); ?></td>
+          <td><?php echo escape($row["marca"]); ?></td>
+          <td><?php echo escape($row["model"]); ?></td>
           <td><?php echo escape($row["costachizitie"]); ?></td>
           <td><?php echo escape($row["costvanzare"]); ?></td>
           <td><?php echo escape($row["cantitate"]); ?> </td>
