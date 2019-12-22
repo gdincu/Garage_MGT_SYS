@@ -14,30 +14,40 @@ if (isset($_POST['submit'])) {
     
     $nrtelefon = $_POST['nrtelefon'];
     $nrinmatriculare = $_POST['nrinmatriculare'];
-    $nrtelefon = "%" . $_POST['marcamasina'] . "%";
-    $nrtelefon = $_POST['modelmasina'];
+    $marcamasina = "%" . $_POST['marcamasina'] . "%";
+    $modelmasina = $_POST['modelmasina'];
     $motor = $_POST['motor'];
     $vin = $_POST['vin'];
     $detalii = $_POST['detalii'];
     $avariat = $_POST['avariat'];
+    $receptionat = $_POST['receptionat'];
     $acesorii = $_POST['acesorii'];
     $km = $_POST['km'];
     $observatii = $_POST['observatii'];
-    $receptionat = $_POST['receptionat'];
     $success = $_POST['nrinmatriculare'] . " adaugat cu success.";
 
     $sql = "INSERT INTO masina (id_auto,nrinmatriculare,motor,vin,detalii,avariat,acesorii,km,observatii,receptionat,datareceptie)
-            (SELECT id,:nrinmatriculare,:motor,:vin,:detalii,:avariat,:acesorii,:km,:observatii,:receptionat,CURRENT_TIMESTAMP()
-            FROM auto_list WHERE marca LIKE :marcamasina AND model = :modelmasina);
-            
-            INSERT INTO clientmasina (idclient,idmasina)
-            (SELECT a.id,b.id
-            FROM masina a
-            FROM client b
-            WHERE a.nrinmatriculare = :nrinmatriculare
-            AND b.nrtelefon = :nrtelefon)";
+    SELECT id,:nrinmatriculare,:motor,:vin,:detalii,:avariat,:acesorii,:km,:observatii,:receptionat,CURRENT_TIMESTAMP()
+    FROM auto_list WHERE marca LIKE :marcamasina AND model = :modelmasina;
+    INSERT INTO clientmasina (idclient,idmasina)
+    SELECT b.id,a.id
+    FROM masina a, client b
+    WHERE a.nrinmatriculare = :nrinmatriculare
+    AND b.nrtelefon = :nrtelefon;";             
     
     $statement = $connection->prepare($sql);
+    $statement->bindValue(':nrinmatriculare', $nrinmatriculare);
+    $statement->bindValue(':nrtelefon', $nrtelefon);
+    $statement->bindValue(':marcamasina', $marcamasina);
+    $statement->bindValue(':modelmasina', $modelmasina);
+    $statement->bindValue(':motor', $motor);
+    $statement->bindValue(':vin', $vin);
+    $statement->bindValue(':detalii', $detalii);
+    $statement->bindValue(':avariat', $avariat);
+    $statement->bindValue(':receptionat', $receptionat);
+    $statement->bindValue(':acesorii', $acesorii);
+    $statement->bindValue(':km', $km);
+    $statement->bindValue(':observatii', $observatii);
     $statement->execute();
 
     if (isset($_POST['submit']) && $statement->rowCount() > 0) { 
@@ -109,34 +119,22 @@ if (isset($_POST['submit'])) {
 
     <p>
     <div class="form-row">
-    <div class="col">Avariat</div>
     <div class="col">
-    <input class="form-check-input" type="checkbox" id="avariat" name="avariat" value="DA">
-    <label class="form-check-label" for="avariat">Da</label>
+    <input type="text" class="form-control" id="avariat" name="avariat" placeholder="Avariat (DA/NU). Se poate omite." default="NU">
     </div>
     <div class="col">
-    <input class="form-check-input" type="checkbox" id="avariat" name="avariat" value="DA">
-    <label class="form-check-label" for="avariat">Nu</label>
+    <input type="text" class="form-control" id="receptionat" name="receptionat" placeholder="Receptionat (DA/NU). Se poate omite." default="NU">
     </div>
-
-    <div class="col">Receptionat</div>
-    <div class="col">
-    <input class="form-check-input" type="checkbox" id="receptionat" name="receptionat" value="DA">
-    <label class="form-check-label" for="avariat">Da</label>
-    </div>
-    <div class="col">
-    <input class="form-check-input" type="checkbox" id="receptionat" name="receptionat" value="DA">
-    <label class="form-check-label" for="avariat">Nu</label>
-    </div>
-
     </div>
     </p>
     
+    <p>
     <div class="form-row">
     <div class="col">
     <button type="submit" name="submit" class="btn btn-primary">Adauga</button>
     </div>
     </div>
+    </p>
     
     
   </div>
