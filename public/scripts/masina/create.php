@@ -12,57 +12,135 @@ if (isset($_POST['submit'])) {
   try  {
     $connection = new PDO($dsn, $username, $password, $options);
     
-    $new_user = array(
-      "nume" => $_POST['nume'],
-      "prenume"  => $_POST['prenume'],
-      "nrtelefon"     => $_POST['nrtelefon'],
-      "email"       => $_POST['email'],
-      "adresa"  => $_POST['adresa'],
-      "observatii"  => $_POST['observatii']
-    );
+    $nrtelefon = $_POST['nrtelefon'];
+    $nrinmatriculare = $_POST['nrinmatriculare'];
+    $nrtelefon = "%" . $_POST['marcamasina'] . "%";
+    $nrtelefon = $_POST['modelmasina'];
+    $motor = $_POST['motor'];
+    $vin = $_POST['vin'];
+    $detalii = $_POST['detalii'];
+    $avariat = $_POST['avariat'];
+    $acesorii = $_POST['acesorii'];
+    $km = $_POST['km'];
+    $observatii = $_POST['observatii'];
+    $receptionat = $_POST['receptionat'];
+    $success = $_POST['nrinmatriculare'] . " adaugat cu success.";
 
-    $sql = sprintf(
-      "INSERT INTO %s (%s) values (%s)",
-      "client","nume,prenume,nrtelefon,email,adresa,observatii",
-      ":" . implode(", :", array_keys($new_user))
-    );
+    $sql = "INSERT INTO masina (id_auto,nrinmatriculare,motor,vin,detalii,avariat,acesorii,km,observatii,receptionat,datareceptie)
+            (SELECT id,:nrinmatriculare,:motor,:vin,:detalii,:avariat,:acesorii,:km,:observatii,:receptionat,CURRENT_TIMESTAMP()
+            FROM auto_list WHERE marca LIKE :marcamasina AND model = :modelmasina);
+            
+            INSERT INTO clientmasina (idclient,idmasina)
+            (SELECT a.id,b.id
+            FROM masina a
+            FROM client b
+            WHERE a.nrinmatriculare = :nrinmatriculare
+            AND b.nrtelefon = :nrtelefon)";
     
     $statement = $connection->prepare($sql);
-    $statement->execute($new_user);
+    $statement->execute();
+
+    if (isset($_POST['submit']) && $statement->rowCount() > 0) { 
+      echo $success; 
+    } else {
+      echo "Mai incearca!";
+    }
+
   } catch(PDOException $error) {
       echo $sql . "<br>" . $error->getMessage();
   }
 }
 ?>
 
-  <?php if (isset($_POST['submit']) && $statement) : ?>
-    <blockquote><?php echo escape($_POST['prenume']); ?> adaugat cu success.</blockquote>
-  <?php endif; ?>
-
-  <h2>Adauga client</h2>
+<h2>Adauga masina</h2>
 
   <form method="post">
-    <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
-    <label for="nume">Nume</label>
-    <input type="text" name="nume" id="nume" required>
-    <br>
-    <label for="prenume">Prenume</label>
-    <input type="text" name="prenume" id="prenume" required>
-    <br>
-    <label for="nrtelefon">Nr. de Telefon</label>
-    <input type="text" name="nrtelefon" id="nrtelefon" required>
-    <br>
-    <label for="email">Email</label>
-    <input type="text" name="email" id="email">
-    <br>
-    <label for="adresa">Adresa</label>
-    <input type="text" name="adresa" id="adresa">
-    <br>
-    <label for="observatii">Observatii</label>
-    <input type="text" name="observatii" id="observatii">
-    <br><br>
-    <input type="submit" name="submit" value="Salveaza">
-  </form>
+  <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
+  
+    <p>
+    <div class="form-row">
+    <div class="col">
+    <input type="text" class="form-control" id="marcamasina" name="marcamasina" placeholder="Marca masina exact sau aproximativ. Se poate omite.">
+    </div>
+    <div class="col">
+    <input type="text" class="form-control" id="marcamasina" name="modelmasina" placeholder="Model masina exact. Nu se poate omite." required>
+    </div>
+    </div>
+    </p>
+
+    <p>
+    <div class="form-row">
+    <div class="col">
+    <input type="text" class="form-control" id="nrinmatriculare" name="nrinmatriculare" placeholder="Nr. de inmatriculare. Nu se poate omite." required>
+    </div>
+    <div class="col">
+    <input type="text" class="form-control" id="nrtelefon" name="nrtelefon" placeholder="Nr. de telefon. Nu se poate omite." required>
+    </div>
+    </div>
+    </p>
+
+    <p>
+    <div class="form-row">
+    <div class="col">
+    <input type="text" class="form-control" id="motor" name="motor" placeholder="Motor. Se poate omite.">
+    </div>
+    <div class="col">
+    <input type="text" class="form-control" id="vin" name="vin" placeholder="VIN. Se poate omite.">
+    </div>
+    <div class="col">
+    <input type="number" class="form-control" id="km" name="km" placeholder="Kilometraj. Se poate omite.">
+    </div>
+    </div>
+    </p>
+
+    <p>
+    <div class="form-row">
+    <div class="col">
+    <input type="text" class="form-control" id="detalii" name="detalii" placeholder="Detalii. Se poate omite.">
+    </div>
+    <div class="col">
+    <input type="text" class="form-control" id="acesorii" name="acesorii" placeholder="Acesorii. Se poate omite.">
+    </div>
+    <div class="col">
+    <input type="text" class="form-control" id="observatii" name="observatii" placeholder="Observatii. Se poate omite.">
+    </div>
+    </div>
+    </p>
+
+    <p>
+    <div class="form-row">
+    <div class="col">Avariat</div>
+    <div class="col">
+    <input class="form-check-input" type="checkbox" id="avariat" name="avariat" value="DA">
+    <label class="form-check-label" for="avariat">Da</label>
+    </div>
+    <div class="col">
+    <input class="form-check-input" type="checkbox" id="avariat" name="avariat" value="DA">
+    <label class="form-check-label" for="avariat">Nu</label>
+    </div>
+
+    <div class="col">Receptionat</div>
+    <div class="col">
+    <input class="form-check-input" type="checkbox" id="receptionat" name="receptionat" value="DA">
+    <label class="form-check-label" for="avariat">Da</label>
+    </div>
+    <div class="col">
+    <input class="form-check-input" type="checkbox" id="receptionat" name="receptionat" value="DA">
+    <label class="form-check-label" for="avariat">Nu</label>
+    </div>
+
+    </div>
+    </p>
+    
+    <div class="form-row">
+    <div class="col">
+    <button type="submit" name="submit" class="btn btn-primary">Adauga</button>
+    </div>
+    </div>
+    
+    
+  </div>
+</form>
 
 </div>
 <?php include "../../templates/footer_script.php"; ?>
