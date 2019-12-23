@@ -25,7 +25,7 @@ CREATE TABLE auto_list (
 );
 
 --TO INSERT
-INSERT INTO auto_list (marca,model) VALUES
+INSERT INTO auto_list (id,marca,model) VALUES
     (NULL,'Seat','Alhambra'),
     (NULL,'Seat','Altea'),
     (NULL,'Seat','Altea XL'),
@@ -276,7 +276,7 @@ INSERT INTO auto_list (marca,model) VALUES
     (NULL,'Mazda','121'),
     (NULL,'Mazda','2'),
     (NULL,'Mazda','3');
-INSERT INTO auto_list (marca,model) VALUES
+INSERT INTO auto_list (null,marca,model) VALUES
     (NULL,'Mazda','323'),
     (NULL,'Mazda','323 Combi'),
     (NULL,'Mazda','323 Coupé'),
@@ -527,7 +527,7 @@ INSERT INTO auto_list (marca,model) VALUES
     (NULL,'Mercedes-Benz','GL'),
     (NULL,'Mercedes-Benz','GLA'),
     (NULL,'Mercedes-Benz','GLC');
-INSERT INTO auto_list (marca,model) VALUES
+INSERT INTO auto_list (id,marca,model) VALUES
     (NULL,'Mercedes-Benz','GLE'),
     (NULL,'Mercedes-Benz','GLK'),
     (NULL,'Mercedes-Benz','Clasa M'),
@@ -778,7 +778,7 @@ INSERT INTO auto_list (marca,model) VALUES
     (NULL,'Nissan','Cabstar TL2 Valnik'),
     (NULL,'Nissan','e-NV200'),
     (NULL,'Nissan','GT-R');
-INSERT INTO auto_list (marca,model) VALUES
+INSERT INTO auto_list (id,marca,model) VALUES
     (NULL,'Nissan','Insterstar'),
     (NULL,'Nissan','Juke'),
     (NULL,'Nissan','King Cab'),

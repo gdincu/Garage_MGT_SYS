@@ -12,25 +12,22 @@ if (isset($_POST['submit'])) {
   try  {
     $connection = new PDO($dsn, $username, $password, $options);
 
-    $nume = "%".$_POST['nume']."%";
-    $prenume = "%".$_POST['prenume']."%";
-    $nrtelefon = $_POST['nrtelefon'];
+    $marca = "%".$_POST['marca']."%";
+    $model = $_POST['model'];
 
     $sql = "SELECT * 
-            FROM client 
-            WHERE nume LIKE :nume
-            AND prenume LIKE :prenume
-            AND nrtelefon = :nrtelefon";
+            FROM auto_list 
+            WHERE marca LIKE :marca
+            AND model = :model";
     
     $statement = $connection->prepare($sql);
-    $statement->bindParam(':nume', $nume, PDO::PARAM_STR);
-    $statement->bindParam(':prenume', $prenume, PDO::PARAM_STR);
-    $statement->bindParam(':nrtelefon', $nrtelefon, PDO::PARAM_STR);
-
+    $statement->bindParam(':marca', $marca, PDO::PARAM_STR);
+    $statement->bindParam(':model', $model, PDO::PARAM_STR);
     $statement->execute();
-
     $result = $statement->fetchAll();
-  } catch(PDOException $error) {
+	
+  }
+  catch(PDOException $error) {
       echo $sql . "<br>" . $error->getMessage();
   }
 }?>
@@ -45,15 +42,11 @@ if (isset($_POST['submit'])) {
     <div class="form-row">
     
     <div class="col">
-    <input type="text" class="form-control" id="nume" name="nume" placeholder="Nume exact sau partial. Se poate omite.">
+    <input type="text" class="form-control" id="marca" name="marca" placeholder="Marca exact sau partial. Se poate omite.">
     </div>
     
     <div class="col">
-    <input type="text" class="form-control" id="prenume" name="prenume" placeholder="Prenume exact sau partial. Se poate omite.">
-    </div>
-    
-    <div class="col">
-    <input type="text" class="form-control" id="nrtelefon" name="nrtelefon" placeholder="Nr. de telefon exact. Nu se poate omite.">
+    <input type="text" class="form-control" id="model" name="model" placeholder="Model exact. Nu se poate omite.">
     </div>
     
     <button type="submit" name="submit" class="btn btn-primary">Rezultate</button>
@@ -65,43 +58,28 @@ if (isset($_POST['submit'])) {
 if (isset($_POST['submit'])) {
   if ($result && $statement->rowCount() == 1) { 
 
+	$model = "";
+	$marca = "";
+
     foreach ($result as $row) {
+		$model = $row["model"];
+		$marca = $row["marca"];
 		echo "
-		<h2><br>Modifica client</h2>
+		<h2><br>Modifica model</h2>
 		<form method=\"post\">
 		<input name=\"csrf\" type=\"hidden\" value=\"" . $_SESSION['csrf'] ."\">
 		
 		<p>
 		<div class=\"form-row\">
 		<div class=\"col\">
-		<input type=\"text\" class=\"form-control\" id=\"nume1\" name=\"nume1\" value = \"" . $row["nume"] . "\" required>
+		<input type=\"text\" class=\"form-control\" id=\"marca1\" name=\"marca1\" value = \"" . $row["marca"] . "\">
 		</div>
 		<div class=\"col\">
-		<input type=\"text\" class=\"form-control\" id=\"prenume1\" name=\"prenume1\" value = \"" . $row["prenume"] ."\" required>
+		<input type=\"text\" class=\"form-control\" id=\"model1\" name=\"model1\" value = \"" . $row["model"] ."\">
 		</div>
 		</div>
 		</p>
-		
-		<p>
-		<div class=\"form-row\">
-		<div class=\"col\">
-		<input type=\"text\" class=\"form-control\" id=\"nrtelefon1\" name=\"nrtelefon1\" value = \"" . $row["nrtelefon"] . "\" title=\"Nu se poate modifica.\">
-		</div>
-		<div class=\"col\">
-		<input type=\"email\" class=\"form-control\" id=\"email1\" name=\"email1\" value = \"" . $row["email"] . "\">
-		</div>
-		<div class=\"col\">
-		<input type=\"text\" class=\"form-control\" id=\"adresa1\" name=\"adresa1\" value = \"" . $row["adresa"] . "\" required>
-		</div>
-		</p>
-
-		<p>
-		<div class=\"form-row\">
-		<div class=\"col\">
-		<input type=\"text\" class=\"form-control\" id=\"observatii1\" name=\"observatii1\" value = \"" . $row["observatii"] . "\">
-		</div>
-		</p>
-
+	
 		<div class=\"form-row\">
 		<div class=\"col\">
 		<button type=\"submit\" name=\"submit1\" class=\"btn btn-primary\">Modifica</button>
@@ -112,12 +90,10 @@ if (isset($_POST['submit'])) {
 		</form>";
     }
 }	else if($result && $statement->rowCount() > 1)
-			echo "<br>Se poate modifica un singur client deodata. Schimbati nr. de telefon.";
-	else 	echo "<br>Nici un client gasit conform rezultatelor cautarii.";
+			echo "<br>Se poate modifica un singur model deodata. Schimbati modelul.";
+	else 	echo "<br>Nici un model gasit conform rezultatelor cautarii.";
 }
-?> 
 
-    <?php
     if (isset($_POST['submit1'])) {
         if (!hash_equals($_SESSION['csrf'], $_POST['csrf'])) die();
           
@@ -125,31 +101,21 @@ if (isset($_POST['submit'])) {
 
                    $connection1 = new PDO($dsn, $username, $password, $options);
               
-                   $nume1 = $_POST['nume1'];
-                   $prenume1 = $_POST['prenume1'];
-                   $nrtelefon1 = $_POST['nrtelefon1'];
-                   $email1 = $_POST['email1'];
-                   $adresa1 = $_POST['adresa1'];
-                   $observatii1 = $_POST['observatii1'];
-                   $success = $_POST['nume1'] . " " . $_POST['prenume1'] . " modificat cu succes.";
+                   $marca1 = $_POST['marca1'];
+                   $model1 = $_POST['model1'];
+                   $success = "<br>" . $marca1 . " " . $model1 . " modificat cu succes.";
               
-                  $sql1 = " UPDATE client 
-                            SET   nume = :nume1,
-                                prenume = :prenume1,
-                                nrtelefon = :nrtelefon1,
-                                email = :email1,
-                                adresa = :adresa1,
-                                observatii = :observatii1
-                            WHERE nrtelefon = :nrtelefon1";
-                          
+                  $sql1 = " UPDATE auto_list 
+                            SET marca := marca1,
+                                model = :model1
+                            WHERE model = :marca
+							AND marca LIKE :marca";
                           
                   $statement1 = $connection1->prepare($sql1);
-                  $statement1->bindParam(':nume1', $nume1, PDO::PARAM_STR);
-                  $statement1->bindParam(':prenume1', $prenume1, PDO::PARAM_STR);
-                  $statement1->bindParam(':nrtelefon1', $nrtelefon1, PDO::PARAM_STR);
-                  $statement1->bindParam(':email1', $email1, PDO::PARAM_STR);
-                  $statement1->bindParam(':adresa1', $adresa1, PDO::PARAM_STR);
-                  $statement1->bindParam(':observatii1', $observatii1, PDO::PARAM_STR);
+                  $statement1->bindParam(':marca1', $marca1, PDO::PARAM_STR);
+                  $statement1->bindParam(':model1', $model1, PDO::PARAM_STR);
+				  $statement1->bindParam(':marca', $marca1);
+                  $statement1->bindParam(':model', $model1);
                   $statement1->execute();
 
                   if (isset($_POST['submit1']) && $statement1->rowCount() > 0) { 

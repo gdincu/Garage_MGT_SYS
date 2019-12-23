@@ -5,17 +5,13 @@
 <?php
 require "../config.php";
 require "../common.php";
-
 if (isset($_POST['submit'])) {
   if (!hash_equals($_SESSION['csrf'], $_POST['csrf'])) die();
-
   try  {
     $connection = new PDO($dsn, $username, $password, $options);
-
     $nume = "%".$_POST['nume']."%";
     $prenume = "%".$_POST['prenume']."%";
     $nrtelefon = $_POST['nrtelefon'];
-
     $sql = "SELECT * 
             FROM client 
             WHERE nume LIKE :nume
@@ -26,9 +22,7 @@ if (isset($_POST['submit'])) {
     $statement->bindParam(':nume', $nume, PDO::PARAM_STR);
     $statement->bindParam(':prenume', $prenume, PDO::PARAM_STR);
     $statement->bindParam(':nrtelefon', $nrtelefon, PDO::PARAM_STR);
-
     $statement->execute();
-
     $result = $statement->fetchAll();
   } catch(PDOException $error) {
       echo $sql . "<br>" . $error->getMessage();
@@ -64,7 +58,6 @@ if (isset($_POST['submit'])) {
 <?php  
 if (isset($_POST['submit'])) {
   if ($result && $statement->rowCount() == 1) { 
-
     foreach ($result as $row) {
 		echo "
 		<h2><br>Modifica client</h2>
@@ -94,14 +87,12 @@ if (isset($_POST['submit'])) {
 		<input type=\"text\" class=\"form-control\" id=\"adresa1\" name=\"adresa1\" value = \"" . $row["adresa"] . "\" required>
 		</div>
 		</p>
-
 		<p>
 		<div class=\"form-row\">
 		<div class=\"col\">
 		<input type=\"text\" class=\"form-control\" id=\"observatii1\" name=\"observatii1\" value = \"" . $row["observatii"] . "\">
 		</div>
 		</p>
-
 		<div class=\"form-row\">
 		<div class=\"col\">
 		<button type=\"submit\" name=\"submit1\" class=\"btn btn-primary\">Modifica</button>
@@ -122,7 +113,6 @@ if (isset($_POST['submit'])) {
         if (!hash_equals($_SESSION['csrf'], $_POST['csrf'])) die();
           
                 try  {
-
                    $connection1 = new PDO($dsn, $username, $password, $options);
               
                    $nume1 = $_POST['nume1'];
@@ -131,7 +121,7 @@ if (isset($_POST['submit'])) {
                    $email1 = $_POST['email1'];
                    $adresa1 = $_POST['adresa1'];
                    $observatii1 = $_POST['observatii1'];
-                   $success = $_POST['nume1'] . " " . $_POST['prenume1'] . " modificat cu succes.";
+                   $success = "<br>" . $_POST['nume1'] . " " . $_POST['prenume1'] . " modificat cu succes.";
               
                   $sql1 = " UPDATE client 
                             SET   nume = :nume1,
@@ -151,7 +141,6 @@ if (isset($_POST['submit'])) {
                   $statement1->bindParam(':adresa1', $adresa1, PDO::PARAM_STR);
                   $statement1->bindParam(':observatii1', $observatii1, PDO::PARAM_STR);
                   $statement1->execute();
-
                   if (isset($_POST['submit1']) && $statement1->rowCount() > 0) { 
                     echo $success; 
                   } else {
@@ -162,7 +151,6 @@ if (isset($_POST['submit'])) {
         catch(PDOException $error) {
             echo $sql1 . "<br>" . $error->getMessage();
         }
-
             }
     ?>
 
