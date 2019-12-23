@@ -12,6 +12,9 @@
   <!-- Custom scripts for this template -->
   <script src="../../js/freelancer.min.js"></script>
 
+  <!-- Custom script for modal key shortcuts -->
+  <script src="../../js/modal_short.js"></script>
+
 </body>
 
 </html>
