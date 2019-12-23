@@ -1,6 +1,7 @@
 <?php include "../../templates/header_script.php"; ?>
 
 <div class="col-md-12 col-lg-12">
+
 <?php
 require "../config.php";
 require "../common.php";
@@ -10,85 +11,119 @@ if (isset($_POST['submit'])) {
 
   try  {
     $connection = new PDO($dsn, $username, $password, $options);
-
-    $nume = $_POST['nume'];
-    $prenume = $_POST['prenume'];
-    $nrtelefon = $_POST['nrtelefon'];
-
-    $sql = "SELECT * 
-            FROM client 
-            WHERE nume LIKE :nume
-            AND prenume LIKE :prenume
-            AND nrtelefon LIKE :nrtelefon";
     
+    $nume = "%" . $_POST['nume'] . "%";
+    $prenume = "%" . $_POST['prenume'] . "%";
+    $nrtelefon = "%" . $_POST['nrtelefon'] . "%";
+    $marcamasina = "%" . $_POST['marcamasina'] . "%";
+    $modelmasina = "%" . $_POST['modelmasina'] . "%";
+
+    $sql = "SELECT a.id,b.nume,b.prenume,c.marca,c.model,a.cost_manopera,a.cost_piese,a.cost_total,a.observatii,a.date
+            FROM factura a, , auto_list c
+            LEFT JOIN client b ON nume LIKE :nume AND prenume LIKE :prenume AND nrtelefon LIKE :nrtelefon
+            LEFT JOIN auto_list c ON marca LIKE :marcamasina AND model LIKE :modelmasina";
+
     $statement = $connection->prepare($sql);
     $statement->bindParam(':nume', $nume, PDO::PARAM_STR);
     $statement->bindParam(':prenume', $prenume, PDO::PARAM_STR);
     $statement->bindParam(':nrtelefon', $nrtelefon, PDO::PARAM_STR);
-
+    $statement->bindParam(':marcamasina', $marcamasina, PDO::PARAM_STR);
+    $statement->bindParam(':modelmasina', $modelmasina, PDO::PARAM_STR);
     $statement->execute();
-
     $result = $statement->fetchAll();
+    
   } catch(PDOException $error) {
       echo $sql . "<br>" . $error->getMessage();
   }
-}?>
-   
-<?php  
-if (isset($_POST['submit'])) {
-  if ($result && $statement->rowCount() > 0) { ?>
-    <h2>Lista clienti conform criteriilor de cautare: </h2>
-
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Nume</th>
-          <th>Prenume</th>
-          <th>Nr. Telefon</th>
-	     	  <th>Email</th>
-          <th>Adresa</th>
-          <th>Observatii</th>
-          <th>Data</th>
-        </tr>
-      </thead>
-      <tbody>
-      <?php foreach ($result as $row) : ?>
-        <tr>
-          <td><?php echo escape($row["id"]); ?></td>
-          <td><?php echo escape($row["nume"]); ?></td>
-          <td><?php echo escape($row["prenume"]); ?></td>
-          <td><?php echo escape($row["nrtelefon"]); ?></td>
-          <td><?php echo escape($row["email"]); ?></td>
-          <td><?php echo escape($row["adresa"]); ?></td>
-          <td><?php echo escape($row["observatii"]); ?> </td>
-		      <td><?php echo escape($row["date"]); ?> </td>		  
-        </tr>
-      <?php endforeach; ?>
-      </tbody>
-    </table>
-    <?php } else { ?>
-      <blockquote>No results found.</blockquote>
-    <?php } 
-} ?> 
+}
+?>
 
 <h2>Criterii cautare</h2>
 
 <form method="post">
   <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
   
-  <label for="nume">Nume</label>
-  <input type="text" id="nume" name="nume" value="%%">
-  <br>
-  <label for="prenume">Prenume</label>
-  <input type="text" id="prenume" name="prenume" value="%%">
-  <br>
-  <label for="adresa">Nr. de Telefon</label>
-  <input type="text" id="nrtelefon" name="nrtelefon" value="%%">
-  <br>
-  <input type="submit" name="submit" value="Rezultate">
+  <div class="form-group">
+    <p>
+    <div class="form-row">
+    
+    <div class="col">
+    <input type="text" class="form-control" id="nume" name="nume" placeholder="Nume exact sau partial. Se poate omite.">
+    </div>
+    
+    <div class="col">
+    <input type="text" class="form-control" id="prenume" name="prenume" placeholder="Prenume exact sau partial. Se poate omite.">
+    </div>
+    
+    <div class="col">
+    <input type="text" class="form-control" id="nrtelefon" name="nrtelefon" placeholder="Nr. de telefon exact. Se poate omite.">
+    </div>
+
+    </div>
+    </p>
+
+    <p>
+    <div class="form-row">
+    
+    <div class="col">
+    <input type="text" class="form-control" id="marcamasina" name="marcamasina" placeholder="Marca exacta sau partiala. Se poate omite.">
+    </div>
+    
+    <div class="col">
+    <input type="text" class="form-control" id="modelmasina" name="modelmasina" placeholder="Model exact. Se poate omite.">
+    </div>
+
+    </div>
+    </p>
+    
+    <button type="submit" name="submit" class="btn btn-primary">Rezultate</button>
+
+  </div>
 </form>
 
-</div>
+<?php  
+if (isset($_POST['submit'])) {
+  if ($result && $statement->rowCount() > 0) { ?>
+    
+<h2>Lista facturi conform criteriilor de cautare: </h2>
 
+    <table class="col">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nume</th>
+          <th>Prenume</th>
+          <th>Marca</th>
+          <th>Model</th>
+	     	  <th>Cost Manopera</th>
+          <th>Cost Piese</th>
+          <th>Cost Total</th>
+          <th>Observatii</th>
+          <th>Data</th>
+        </tr>
+      </thead>
+      <tbody>
+
+<?php foreach ($result as $row) : ?>
+        <tr>
+          <td><?php echo escape($row["id"]); ?></td>
+          <td><?php echo escape($row["nume"]); ?></td>
+          <td><?php echo escape($row["prenume"]); ?></td>
+          <td><?php echo escape($row["marca"]); ?></td>
+          <td><?php echo escape($row["model"]); ?></td>
+          <td><?php echo escape($row["cost_manopera"]); ?></td>
+          <td><?php echo escape($row["cost_piese"]); ?> </td>
+          <td><?php echo escape($row["cost_total"]); ?> </td>
+          <td><?php echo escape($row["observatii"]); ?> </td>
+		      <td><?php echo escape($row["date"]); ?> </td>		  
+        </tr>
+<?php endforeach; ?>
+      </tbody>
+    </table>
+    <?php } else { ?>
+      <blockquote>No results found.</blockquote>
+    <?php } 
+} ?>
+
+</div>
 <?php include "../../templates/footer_script.php"; ?>

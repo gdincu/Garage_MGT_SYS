@@ -12,23 +12,24 @@ if (isset($_POST['submit'])) {
   try  {
     $connection = new PDO($dsn, $username, $password, $options);
     
-    $new_user = array(
-      "nume" => $_POST['nume'],
-      "prenume"  => $_POST['prenume'],
-      "nrtelefon"     => $_POST['nrtelefon'],
-      "email"       => $_POST['email'],
-      "adresa"  => $_POST['adresa'],
-      "observatii"  => $_POST['observatii']
-    );
+    $nume = $_POST['nume'];
+    $prenume = $_POST['prenume'];
+    $nrtelefon = $_POST['nrtelefon'];
+    $marcamasina = $_POST['marcamasina'];
+    $modelmasina = $_POST['modelmasina'];
 
-    $sql = sprintf(
-      "INSERT INTO %s (%s) values (%s)",
-      "client","nume,prenume,nrtelefon,email,adresa,observatii",
-      ":" . implode(", :", array_keys($new_user))
-    );
+    $sql = "SELECT a.id idfactura,b.nume,b.prenume,c.marca,c.model,a.cost_manopera,a.cost_piese,a.cost_total,a.observatii,a.date
+            FROM factura a
+            INNER JOIN client b ON b.id = a.idclient
+            INNER JOIN masina c ON c.id = c.idmasina
+            WHERE b.nume LIKE :nume
+            AND b.prenume LIKE :prenume
+            AND c.marca LIKE :marcamasina
+            AND c.model = :modelmasina";
     
     $statement = $connection->prepare($sql);
-    $statement->execute($new_user);
+    $statement->execute();
+    
   } catch(PDOException $error) {
       echo $sql . "<br>" . $error->getMessage();
   }
