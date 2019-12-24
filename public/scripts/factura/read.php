@@ -18,10 +18,16 @@ if (isset($_POST['submit'])) {
     $marcamasina = "%" . $_POST['marcamasina'] . "%";
     $modelmasina = "%" . $_POST['modelmasina'] . "%";
 
-    $sql = "SELECT a.id,b.nume,b.prenume,c.marca,c.model,a.cost_manopera,a.cost_piese,a.cost_total,a.observatii,a.date
-            FROM factura a, , auto_list c
-            LEFT JOIN client b ON nume LIKE :nume AND prenume LIKE :prenume AND nrtelefon LIKE :nrtelefon
-            LEFT JOIN auto_list c ON marca LIKE :marcamasina AND model LIKE :modelmasina";
+    $sql = "SELECT a.id,b.nume,b.prenume,d.marca,d.model,c.nrinmatriculare,a.cost_manopera,a.cost_piese,a.cost_total,a.observatii,a.date
+FROM factura a
+INNER JOIN client b ON b.id = a.idclient
+INNER JOIN masina c ON c.id = a.idmasina
+INNER JOIN auto_list d ON c.id_auto = d.id
+WHERE b.nume LIKE :nume
+AND b.prenume LIKE :prenume
+AND b.nrtelefon LIKE :nrtelefon
+AND d.marca LIKE :marcamasina
+AND d.model LIKE :modelmasina";
 
     $statement = $connection->prepare($sql);
     $statement->bindParam(':nume', $nume, PDO::PARAM_STR);
@@ -95,7 +101,8 @@ if (isset($_POST['submit'])) {
           <th>Prenume</th>
           <th>Marca</th>
           <th>Model</th>
-	     	  <th>Cost Manopera</th>
+		  <th>Nr. Inmatriculare</th>
+	      <th>Cost Manopera</th>
           <th>Cost Piese</th>
           <th>Cost Total</th>
           <th>Observatii</th>
@@ -111,6 +118,7 @@ if (isset($_POST['submit'])) {
           <td><?php echo escape($row["prenume"]); ?></td>
           <td><?php echo escape($row["marca"]); ?></td>
           <td><?php echo escape($row["model"]); ?></td>
+		  <td><?php echo escape($row["nrinmatriculare"]); ?></td>
           <td><?php echo escape($row["cost_manopera"]); ?></td>
           <td><?php echo escape($row["cost_piese"]); ?> </td>
           <td><?php echo escape($row["cost_total"]); ?> </td>

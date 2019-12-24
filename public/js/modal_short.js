@@ -3,8 +3,7 @@ window.addEventListener('keydown', function(event) {
   switch(event.keyCode) {
   
   case 67: //C
-  if(document.getElementById("clienti") !== null) document.getElementById("clienti").click()
-  else document.getElementById("cauta").click();
+  document.getElementById("clienti").click();
   break;
   
   case 82:
@@ -12,17 +11,11 @@ window.addEventListener('keydown', function(event) {
   break;
 
   case 65: //A
-  if(document.getElementById("rapoarte") !== null) document.getElementById("rapoarte").click();
-  document.getElementById("adauga").click();
+  document.getElementById("rapoarte").click();
   break;
 
   case 77: //M
   $("#portfolioModal1").modal('show');
-  document.getElementById("modifica").click();  
-  break;
-  
-   case 83: //S
-  document.getElementById("sterge").click();  
   break;
 
   case 80: //P
@@ -33,7 +26,7 @@ window.addEventListener('keydown', function(event) {
   $("#portfolioModal2").modal('show');
   break;
 
-  case 32: //Spacebar
+  case 192: //`
   document.getElementsByClassName("navbar-brand js-scroll-trigger")[0].click();
   break;
 

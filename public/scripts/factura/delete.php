@@ -12,17 +12,24 @@ if (isset($_POST['submit'])) {
   try {
     $connection = new PDO($dsn, $username, $password, $options);
   
-    $nume = $_POST['nume'];
-    $prenume = $_POST['prenume'];
-    $nrtelefon = $_POST['nrtelefon'];
-    $success = "Client sters cu success.";
+    $nume = "%".$_POST['nume']."%";
+    $prenume = "%".$_POST['prenume']."%";
+	$nrtelefon = $_POST['nrtelefon'];
+	$nrinmatriculare = $_POST['nrinmatriculare'];
+	$datareceptie = "%".$_POST['datareceptie']."%";
+    $success = "Factura pentru " . $nrinmatriculare . " stearsa cu success.";
 
-    $sql = "DELETE FROM client WHERE (nume = :nume OR prenume = :prenume) AND nrtelefon = :nrtelefon";
+    $sql = "DELETE FROM factura c
+			WHERE c.date LIKE :datareceptie
+			AND idclient = (SELECT id FROM client a WHERE a.nume LIKE :nume AND a.prenume LIKE :prenume AND a.nrtelefon = :nrtelefon)
+			AND idmasina = (SELECT id FROM masina b WHERE b.nrinmatriculare = :nrinmatriculare)";
 
     $statement = $connection->prepare($sql);
     $statement->bindValue(':nume', $nume);
     $statement->bindValue(':prenume', $prenume);
     $statement->bindValue(':nrtelefon', $nrtelefon);
+	$statement->bindValue(':nrinmatriculare', $nrinmatriculare);
+	$statement->bindValue(':datareceptie', $datareceptie);
     $statement->execute();
 
     if (isset($_POST['submit']) && $statement->rowCount() > 0) { 
@@ -38,34 +45,43 @@ if (isset($_POST['submit'])) {
 
 <h2>Sterge client</h2>
 
- <form method="post">
-    <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
-    <label for="nume">Nume</label>
-    <input type="text" name="nume" id="nume" required>
-    <br>
-    <label for="prenume">Prenume</label>
-    <input type="text" name="prenume" id="prenume">
-    <br>
-    <label for="nrtelefon">Nr. de Telefon</label>
-    <input type="text" name="nrtelefon" id="nrtelefon" required>
-    <br><br>
-    <input type="submit" name="submit" value="Sterge">
-  </form>
+<form method="post">
+  <input name="csrf" type="hidden" value="<?php echo escape($_SESSION['csrf']); ?>">
+  
+  <div class="form-group">
+    
+	<p>
+	<div class="form-row">
+    <div class="col">
+    <input type="text" class="form-control" id="nume" name="nume" placeholder="Nume exact sau partial. Se poate omite.">
+    </div>
+    <div class="col">
+    <input type="text" class="form-control" id="prenume" name="prenume" placeholder="Prenume exact sau partial. Se poate omite.">
+    </div>
+    <div class="col">
+    <input type="tel" class="form-control" id="nrtelefon" name="nrtelefon" placeholder="Nr. de telefon exact. Nu se poate omite." required>
+    </div>
+	</div>
+	</p>
+	
+	<p>
+	<div class="form-row">
+	<div class="col">
+    <input type="text" class="form-control" id="nrinmatriculare" name="nrinmatriculare" placeholder="Nr. de Inmatriculare exact. Nu se poate omite." required>
+    </div>
+    <div class="col">
+    <input type="date" class="form-control" id="datareceptie" name="datareceptie" placeholder="Data receptie exacta sau partiala. Se poate omite.">
+    </div>
+	</div>
+	</p>
+    
+	<p>
+    <button type="submit" name="submit" class="btn btn-primary">Sterge</button>
+	</p>
+	
+  </div>
+</form>
 
 </div>
-
-  <!-- Bootstrap core JavaScript -->
-  <script src="../../vendor/jquery/jquery.min.js"></script>
-  <script src="../../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-  <!-- Plugin JavaScript -->
-  <script src="../../vendor/jquery-easing/jquery.easing.min.js"></script>
-
-  <!-- Contact Form JavaScript -->
-  <script src="../../js/jqBootstrapValidation.js"></script>
-  <script src="../../js/contact_me.js"></script>
-
-  <!-- Custom scripts for this template -->
-  <script src="../../js/freelancer.min.js"></script>
 
 <?php include "../../templates/footer_script.php"; ?>
