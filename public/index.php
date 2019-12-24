@@ -9,7 +9,7 @@
       <div class="row">
 
         <!-- Portfolio Item 1 -->
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-12 col-lg-4">
            <div class="portfolio-item mx-auto">
            [C]lienti
             <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
@@ -24,7 +24,7 @@
         </div>
 
         <!-- Portfolio Item 2 -->
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-12 col-lg-4">
           <div class="portfolio-item mx-auto">
           [R]eparatii
             <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
@@ -39,7 +39,7 @@
         </div>
 
         <!-- Portfolio Item 3 -->
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-12 col-lg-4">
           <div class="portfolio-item mx-auto">
           [S]tatistici
             <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
@@ -54,7 +54,7 @@
         </div>
 
         <!-- Portfolio Item 4 -->
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-12 col-lg-4">
           <div class="portfolio-item mx-auto" data-target="#portfolioModal1" data-toggle="modal">
             <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
               <div class="portfolio-item-caption-content text-center text-white">
@@ -67,7 +67,7 @@
         </div>
 
         <!-- Portfolio Item 5 -->
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-12 col-lg-4">
           <div class="portfolio-item mx-auto">
             <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
               <div class="portfolio-item-caption-content text-center text-white">
@@ -82,7 +82,7 @@
         </div>
 
         <!-- Portfolio Item 6 -->
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-12 col-lg-4">
           <div class="portfolio-item mx-auto" data-target="#portfolioModal2" data-toggle="modal">
             <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
               <div class="portfolio-item-caption-content text-center text-white">
@@ -116,7 +116,7 @@
           <div class="container">
           <div class="row justify-content-center">
               
-		<div class="col-md-4 col-lg-4 col-sm-4">
+		<div class="col-md-6 col-lg-6 col-sm-6">
           <div class="portfolio-item mx-auto">
           <div class="text-justify">Masin[i] Clienti</div>
             <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
@@ -130,7 +130,7 @@
           </div>
         </div>
 			  
-		<div class="col-md-4 col-lg-4 col-sm-4">
+		<div class="col-md-6 col-lg-6 col-sm-6">
           <div class="portfolio-item mx-auto">
           <div class="text-justify">Lis[t]a Auto</div>
             <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
@@ -173,7 +173,7 @@
           <div class="container">
           <div class="row justify-content-center">
               
-		<div class="col-md-4 col-lg-4 col-sm-4">
+		<div class="col-md-6 col-lg-6 col-sm-6">
           <div class="portfolio-item mx-auto">
           <div class="text-justify">Crea[z]a Factura</div>
             <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
@@ -187,7 +187,7 @@
           </div>
         </div>
 			  
-		<div class="col-md-4 col-lg-4 col-sm-4">
+		<div class="col-md-6 col-lg-6 col-sm-6">
           <div class="portfolio-item mx-auto">
           <div class="text-justify">C[o]mpleteaza Factura</div>
             <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
