@@ -10,7 +10,7 @@ window.addEventListener('keydown', function(event) {
   document.getElementById("reparatii").click();
   break;
 
-  case 65: //A
+  case 83: //S
   document.getElementById("rapoarte").click();
   break;
 
