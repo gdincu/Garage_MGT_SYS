@@ -1,4 +1,3 @@
---Inserting values into piese
 USE GMS;
 INSERT INTO piese VALUES 
 (null,'Frana','BREMBO',1,12.12,15.15,100,null),

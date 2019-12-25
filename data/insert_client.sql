@@ -1,4 +1,3 @@
---Inserting values into client
 USE GMS;
 INSERT INTO	client 
 VALUES 		(null,'A1','A1','0770777222',null,null,'Client Nou',CURRENT_TIMESTAMP()),

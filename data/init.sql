@@ -1,8 +1,7 @@
 CREATE DATABASE GMS;
-use GMS;
 SET time_zone = "+02:00";
 
-use GMS;
+USE GMS;
 CREATE TABLE client (
 	id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	nume VARCHAR(30) NOT NULL,
@@ -21,7 +20,7 @@ CREATE TABLE auto_list (
 	model VARCHAR(50) NOT NULL
 );
 
-use GMS;
+USE GMS;
 CREATE TABLE masina (
 	id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	id_auto INT(11) UNSIGNED NOT NULL,
@@ -38,7 +37,7 @@ CREATE TABLE masina (
 	FOREIGN KEY (id_auto) REFERENCES auto_list(id)
 );
 
-use GMS;
+USE GMS;
 CREATE TABLE clientmasina (
 	id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	idclient INT(11) UNSIGNED,
@@ -61,7 +60,7 @@ CREATE TABLE factura (
 	FOREIGN KEY (idmasina) REFERENCES masina(id)
 );
 
-use GMS;
+USE GMS;
 CREATE TABLE reparatii (
 	id int(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	nume VARCHAR(100) NOT NULL,
@@ -70,8 +69,7 @@ CREATE TABLE reparatii (
 	pret FLOAT(50) NOT NULL
 );
 
-
-use GMS;
+USE GMS;
 CREATE TABLE piese (
 	id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	nume VARCHAR(100) NOT NULL,
@@ -83,7 +81,7 @@ CREATE TABLE piese (
 	observatii VARCHAR(250)
 );
 
-use GMS;
+USE GMS;
 CREATE TABLE facturapiese (
 	id int(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	idfactura INT(11) UNSIGNED NOT NULL,
@@ -94,8 +92,7 @@ CREATE TABLE facturapiese (
 	FOREIGN KEY (idpiesa) REFERENCES piese(id)
 );
 
-
-use GMS;
+USE GMS;
 CREATE TABLE facturareparatii (
 	id int(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
 	idfactura INT(11) UNSIGNED NOT NULL,

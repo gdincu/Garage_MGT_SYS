@@ -1,5 +1,3 @@
---Insert values into 'facturapiese'
---id	idfactura	idpiesa	cantitate	cost
 USE GMS;
 SET @idfacturaTemp = 3;
 SET @idpiesa = 2;
